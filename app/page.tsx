@@ -69,7 +69,7 @@ export default function Home() {
           <div className="z-10">
             <div className="eyebrow">Hello Buddy</div>
             <h1>
-              I am <span className="accent">Ogunfuye Segun</span>
+              Aleron <span className="accent">Maulana Firjatullah</span>
             </h1>
 
             <div
@@ -386,27 +386,13 @@ export default function Home() {
       Tools and Skills
     </h2>
 
-    {/* <div className="relative h-[120px] overflow-hidden reveal">
-      <LogoLoop
-        logos={techLogos}
-        speed={120}
-        direction="left"
-        logoHeight={64}
-        gap={60}
-        pauseOnHover
-        scaleOnHover
-        fadeOut={true}
-        fadeOutColor="transparent"
-        ariaLabel="Technology tools and skills"
-      />
-    </div> */}
     <div style={{ height: '200px', position: 'relative', overflow: 'hidden'}}>
       <LogoLoop
         logos={techLogos}
         speed={120}
         direction="left"
-        logoHeight={64}
-        gap={60}
+        logoHeight={48}
+        gap={40}
         pauseOnHover
         scaleOnHover
         fadeOut
