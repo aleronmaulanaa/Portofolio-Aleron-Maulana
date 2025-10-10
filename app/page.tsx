@@ -386,7 +386,21 @@ export default function Home() {
       Tools and Skills
     </h2>
 
-    <div className="relative h-[120px] overflow-hidden reveal">
+    {/* <div className="relative h-[120px] overflow-hidden reveal">
+      <LogoLoop
+        logos={techLogos}
+        speed={120}
+        direction="left"
+        logoHeight={64}
+        gap={60}
+        pauseOnHover
+        scaleOnHover
+        fadeOut={true}
+        fadeOutColor="transparent"
+        ariaLabel="Technology tools and skills"
+      />
+    </div> */}
+    <div style={{ height: '200px', position: 'relative', overflow: 'hidden'}}>
       <LogoLoop
         logos={techLogos}
         speed={120}
@@ -396,8 +410,8 @@ export default function Home() {
         pauseOnHover
         scaleOnHover
         fadeOut
-        fadeOutColor="transparent"
-        ariaLabel="Technology tools and skills"
+        fadeOutColor="#1f1f1f"
+        ariaLabel="Technology partners"
       />
     </div>
   </div>
