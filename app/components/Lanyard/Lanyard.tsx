@@ -432,7 +432,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
         lineWidth: 1,
         depthTest: false,
         resolution: new THREE.Vector2(size.width, size.height),
-        repeat: new THREE.Vector2(-3, 1), // <-- PERBAIKAN DI SINI
+        repeat: new THREE.Vector2(-1, 1), // <-- PERBAIKAN DI SINI
       }),
     [size.width, size.height, texture]
   );

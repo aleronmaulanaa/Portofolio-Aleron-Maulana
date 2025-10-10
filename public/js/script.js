@@ -30,7 +30,7 @@
         });
 
         // Active link on scroll
-        const sections = ['#home','#tools','#projects','#snippets','#testimonials'].map(s=>document.querySelector(s));
+        const sections = ['#home','#about', '#tools','#projects','#snippets','#testimonials'].map(s=>document.querySelector(s));
         const io = new IntersectionObserver((entries)=>{
           entries.forEach(entry=>{
             if(entry.isIntersecting){

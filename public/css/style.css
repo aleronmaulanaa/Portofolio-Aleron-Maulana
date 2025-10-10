@@ -153,6 +153,16 @@
         margin-top:32px;background:#262626;border:1px solid rgba(255,255,255,.08);
         border-radius:18px;padding:22px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap
       }
+      .card .thumb {
+  position: relative; /* Penting agar layout="fill" berfungsi */
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Memberi rasio aspek 16:9, bisa diubah */
+  /* Alternatif: gunakan tinggi tetap jika perlu */
+  /* height: 200px; */
+  overflow: hidden; /* Menyembunyikan bagian gambar yang berlebih */
+  background-color: #333; /* Warna placeholder saat gambar dimuat */
+  border-radius: 8px 8px 0 0; /* Menyesuaikan sudut kartu jika ada */
+}
 
       /* Code Snippet */
       .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
