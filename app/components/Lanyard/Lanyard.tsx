@@ -1,7 +1,6 @@
-/* eslint-disable react/no-unknown-property */
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { Canvas, extend, useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import {
   useGLTF,
   useTexture,
@@ -20,10 +19,8 @@ import {
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import * as THREE from "three";
 
-// replace with your own imports, see the usage snippet for details
 const cardGLB = "/assets/lanyard/card.glb";
 const lanyard = "/assets/lanyard/lanyard.png";
-// import lanyard from './lanyard.png';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -94,7 +91,6 @@ interface BandProps {
 }
 
 function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
-  // Using "any" for refs since the exact types depend on Rapier's internals
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);
   const j1 = useRef<any>(null);
@@ -107,6 +103,8 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
   const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
 
+  const { size } = useThree();
+
   const segmentProps: any = {
     type: "dynamic" as RigidBodyProps["type"],
     canSleep: true,
@@ -117,6 +115,19 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
 
   const { nodes, materials } = useGLTF(cardGLB) as any;
   const texture = useTexture(lanyard);
+
+  const lineMaterial = useMemo(
+    () =>
+      new MeshLineMaterial({
+        color: new THREE.Color("white"),
+        map: texture,
+        lineWidth: 1,
+        depthTest: false,
+        resolution: new THREE.Vector2(size.width, size.height),
+      }),
+    [size.width, size.height, texture]
+  );
+
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([
@@ -284,16 +295,8 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
         </RigidBody>
       </group>
       <mesh ref={band}>
-        <MeshLineGeometry />
-        <MeshLineMaterial
-          color="white"
-          depthTest={false}
-          resolution={isSmall ? [1000, 2000] : [1000, 1000]}
-          useMap
-          map={texture}
-          repeat={[-4, 1]}
-          lineWidth={1}
-        />
+        <primitive object={new MeshLineGeometry()} />
+        <primitive object={lineMaterial} attach="material" />
       </mesh>
     </>
   );
