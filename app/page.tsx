@@ -1387,12 +1387,37 @@ export default function Home() {
               </button>
 
               {/* 2. Tombol Bahasa (Baru) */}
-              <button
+              {/* <button
                 onClick={toggleLang}
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white font-bold text-sm transition-all hover:scale-110 border border-transparent hover:border-[var(--accent)]"
                 aria-label="Toggle Language"
               >
                 {lang === "en" ? "EN" : "ID"}
+              </button> */}
+              {/* 2. Tombol Bahasa (Versi Assets Image) */}
+              <button
+                onClick={toggleLang}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white font-bold text-sm transition-all hover:scale-105 border border-transparent hover:border-[var(--accent)] hover:shadow-md group"
+                aria-label="Toggle Language"
+              >
+                {/* Container Gambar Bendera */}
+                <div className="relative w-6 h-4 overflow-hidden rounded-sm shadow-sm">
+                  <Image
+                    /* Logika: Jika sedang EN, tampilkan bendera EN. Jika ID, tampilkan ID. */
+                    src={
+                      lang === "en"
+                        ? "/assets/icons/ic_flag-us.svg"
+                        : "/assets/icons/ic_flag-indonesia.svg"
+                    }
+                    alt={lang === "en" ? "UK Flag" : "Indonesia Flag"}
+                    layout="fill" /* Agar gambar memenuhi kotak w-6 h-4 */
+                    objectFit="cover" /* Agar gambar tidak gepeng */
+                    priority /* PENTING: Anti-lag (Preload gambar ini) */
+                  />
+                </div>
+
+                {/* Teks ID/EN */}
+                <span>{lang === "en" ? "EN" : "ID"}</span>
               </button>
             </div>
           </div>
