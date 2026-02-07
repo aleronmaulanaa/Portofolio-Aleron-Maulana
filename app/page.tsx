@@ -1386,14 +1386,6 @@ export default function Home() {
                 {theme === "dark" ? <FiSun size={20} /> : <FiMoon size={20} />}
               </button>
 
-              {/* 2. Tombol Bahasa (Baru) */}
-              {/* <button
-                onClick={toggleLang}
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-white font-bold text-sm transition-all hover:scale-110 border border-transparent hover:border-[var(--accent)]"
-                aria-label="Toggle Language"
-              >
-                {lang === "en" ? "EN" : "ID"}
-              </button> */}
               {/* 2. Tombol Bahasa (Versi Assets Image) */}
               <button
                 onClick={toggleLang}
@@ -1869,6 +1861,32 @@ export default function Home() {
               {t.nav.tools}
             </a>
           </nav>
+
+          {/* --- DOWNLOAD PORTFOLIO PDF --- */}
+          <a
+            href="/assets/Portofolio_Aleron Maulana F_ID.pdf"
+            download
+            className="flex items-center gap-2 text-sm font-bold text-[var(--accent)] hover:brightness-110 transition-all mb-2"
+            aria-label="Download Portfolio PDF"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            {lang === "en"
+              ? "Download Portfolio Deck (PDF)"
+              : "Unduh Dokumen Portofolio (PDF)"}
+          </a>
 
           <div className="flex gap-6">
             <a
