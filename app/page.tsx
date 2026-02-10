@@ -587,11 +587,20 @@ export default function Home() {
         ref: "Reflection",
         tools: "Tools",
       },
+      // hero: {
+      //   hello: "Hello everyone",
+      //   desc: "I am a 5th-semester student in the D4 Informatics Engineering program at Universitas Airlangga, with a strong interest in technology, particularly in UI/UX Design and Web Development. I have experience in creating user interface designs, developing web-based applications, and actively participating in student organizations and committees.",
+      //   cv: "Download CV",
+      //   more: "More",
+      // },
       hero: {
-        hello: "Hello everyone",
-        desc: "I am a 5th-semester student in the D4 Informatics Engineering program at Universitas Airlangga, with a strong interest in technology, particularly in UI/UX Design and Web Development. I have experience in creating user interface designs, developing web-based applications, and actively participating in student organizations and committees.",
-        cv: "Download CV",
-        more: "More",
+        tagline: "Mobile Developer & UI/UX Designer", // TAMBAHAN BARU
+        hello: "Hi, I'm",
+        // Deskripsi diubah agar lebih 'action-oriented' sesuai CV
+        desc: "An Informatics Engineering student passionate about crafting digital experiences. Currently building mobile apps with Flutter as an Intern at PT Multi Fabrindo and exploring modern web tech with Next.js.",
+        cv: "Download Resume",
+        more: "View Projects",
+        status: "🚀 Currently Intern at PT Multi Fabrindo", // TAMBAHAN BARU
       },
       about: {
         title: "About Me",
@@ -657,11 +666,20 @@ export default function Home() {
         ref: "Refleksi",
         tools: "Tools",
       },
+      // hero: {
+      //   hello: "Halo semuanya",
+      //   desc: "Saya adalah mahasiswa semester 5 program studi D4 Teknik Informatika di Universitas Airlangga, dengan minat yang kuat pada teknologi, khususnya UI/UX Design dan Web Development. Saya memiliki pengalaman dalam membuat desain antarmuka pengguna, mengembangkan aplikasi berbasis web, dan aktif berpartisipasi dalam organisasi mahasiswa serta kepanitiaan.",
+      //   cv: "Unduh CV",
+      //   more: "Selengkapnya",
+      // },
       hero: {
-        hello: "Halo semuanya",
-        desc: "Saya adalah mahasiswa semester 5 program studi D4 Teknik Informatika di Universitas Airlangga, dengan minat yang kuat pada teknologi, khususnya UI/UX Design dan Web Development. Saya memiliki pengalaman dalam membuat desain antarmuka pengguna, mengembangkan aplikasi berbasis web, dan aktif berpartisipasi dalam organisasi mahasiswa serta kepanitiaan.",
+        tagline: "Mobile Developer & UI/UX Designer", // TAMBAHAN BARU
+        hello: "Halo, Saya",
+        // Deskripsi diubah lebih profesional
+        desc: "Mahasiswa Teknik Informatika yang fokus menciptakan solusi digital. Saat ini aktif mengembangkan aplikasi mobile dengan Flutter sebagai Intern di PT Multi Fabrindo dan mengeksplorasi teknologi web modern.",
         cv: "Unduh CV",
-        more: "Selengkapnya",
+        more: "Lihat Proyek",
+        status: "🚀 Sedang Magang di PT Multi Fabrindo", // TAMBAHAN BARU
       },
       about: {
         title: "Tentang Saya",
@@ -835,7 +853,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* === SECTION: HOME === */}
+      {/* === SECTION: HOME ===
       <section id="home" className="relative z-10 flex items-center justify-center min-h-[85vh] bg-[var(--section-bg)] reveal transition-colors duration-300">
         <div className="container hero relative">
           <div className="z-10 max-w-2xl">
@@ -878,6 +896,85 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section> */}
+      {/* === SECTION: HOME (UPDATED) === */}
+      <section
+        id="home"
+        className="relative z-10 flex items-center justify-center min-h-[90vh] bg-[var(--section-bg)] reveal transition-colors duration-300"
+      >
+        <div className="container hero relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          
+          {/* LEFT TEXT */}
+          <div className="z-10 order-2 md:order-1 text-center md:text-left">
+            {/* STATUS BADGE (PENTING: Menunjukkan status profesional Anda dari CV) */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-xs font-semibold mb-6">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              </span>
+              {t.hero.status}
+            </div>
+
+            <div className="eyebrow text-[var(--accent)] font-semibold mb-2 text-lg">
+              {t.hero.hello}
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-bold mb-2 leading-tight">
+              Aleron <br className="hidden md:block" />
+              <span className="text-[var(--accent)]">Maulana F.</span>
+            </h1>
+
+            {/* TAGLINE: Diambil dari CV/Portofolio [cite: 131] */}
+            <h2 className="text-xl md:text-2xl font-medium text-gray-500 dark:text-gray-400 mb-6">
+              {t.hero.tagline}
+            </h2>
+
+            <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
+              {t.hero.desc}
+            </p>
+
+            <div className="actions flex gap-4 justify-center md:justify-start">
+              <a
+                className="btn btn-primary px-8 py-3 rounded-full bg-[var(--accent)] text-white hover:brightness-110 transition shadow-lg shadow-[var(--accent)]/20"
+                href="/assets/CV_Aleron Maulana Firjatullah.pdf" // Pastikan nama file sesuai
+                download
+              >
+                {t.hero.cv}
+              </a>
+              <a
+                className="btn btn-ghost px-8 py-3 border border-gray-300 dark:border-gray-700 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition"
+                href="#projects"
+              >
+                {t.hero.more}
+              </a>
+            </div>
+
+            {/* SOCIALS */}
+            <div className="socials flex gap-4 mt-8 justify-center md:justify-start" aria-label="Sosial">
+              <a href="https://www.instagram.com/aleronmaulanaaa/" className="p-2 rounded-full border border-gray-300 dark:border-gray-700 hover:border-[var(--accent)] hover:text-[var(--accent)] transition" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm10 1.8a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM12 7a5 5 0 100 10 5 5 0 000-10z" /></svg>
+              </a>
+              <a href="https://github.com/aleronmaulanaa" className="p-2 rounded-full border border-gray-300 dark:border-gray-700 hover:border-[var(--accent)] hover:text-[var(--accent)] transition" aria-label="GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.1 11.4.6.1.8-.3.8-.7 0-.4 0-1.4 0-2.7-3.3.7-4-1.6-4-1.6-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1.1 0 1.7 1.2 1.7 1.2 1.1 1.8 2.9 1.3 3.6.9 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.6 0-1.2.4-2.3 1.1-3.1-.1-.3-.5-.9-.2-1.8 0 0 1-.3 3.3 1.2 1-.3 2.1-.5 3.2-.5 1.1 0 2.2.2 3.2.5 2.3-1.5 3.3-1.2 3.3-1.2.3.9-.1 1.5-.2 1.8.7.8 1.1 1.9 1.1 3.1 0 4.3-2.8 5.3-5.5 5.6.4.4.8 1.2.8 2.3 0 1.6 0 2.9 0 3.3.1.5.3.7.8.7 4.7-1.6 8.1-6.1 8.1-11.4 0-6.6-5.4-12-12-12z" /></svg>
+              </a>
+              <a href="http://www.linkedin.com/in/aleron-maulana-firjatullah-037200374" className="p-2 rounded-full border border-gray-300 dark:border-gray-700 hover:border-[var(--accent)] hover:text-[var(--accent)] transition" aria-label="LinkedIn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.1h.1c.5-1 1.8-2.1 3.7-2.1 4 0 4.8 2.6 4.8 5.9V23h-4v-6.3c0-1.5 0-3.5-2.2-3.5-2.2 0-2.6 1.7-2.6 3.4V23h-4V8z" /></svg>
+              </a>
+            </div>
+          </div>
+
+          {/* RIGHT VISUAL (Updated Layout) */}
+          <div className="relative z-0 order-1 md:order-2 flex justify-center items-center h-full min-h-[400px]">
+             {/* Blob Background */}
+             <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent)]/20 to-transparent rounded-full blur-3xl opacity-50 scale-75"></div>
+             
+             {/* Lanyard/3D Element */}
+             <div className="relative w-full h-full flex justify-center items-center">
+                <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+             </div>
+          </div>
+
         </div>
       </section>
 
