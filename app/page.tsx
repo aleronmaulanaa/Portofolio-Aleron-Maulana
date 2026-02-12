@@ -513,29 +513,15 @@ import "../public/css/style.css";
 import Lanyard from "./components/Lanyard/Lanyard";
 import CardSwap, { Card } from "./components/CardSwap/CardSwap";
 import LogoLoop from "./components/LogoLoop/LogoLoop";
-// Import Icon Teknologi
-// import {
-//   SiReact,
-//   SiNextdotjs,
-//   SiTypescript,
-//   SiTailwindcss,
-//   SiFlutter,
-//   SiGo,
-//   SiDocker,
-//   SiPostgresql,
-//   SiMongodb,
-//   SiLaravel,
-//   SiFigma,
-// } from "react-icons/si";
 // Import Icon Teknologi (Lengkap sesuai GitHub Image)
 // Import Icon Teknologi
 import {
   SiReact,
   SiNextdotjs,
   SiTypescript,
-  SiTailwindcss, // <--- Pastikan ini ada
+  SiTailwindcss,
   SiFlutter,
-  SiGo, // <--- Gunakan SiGo (Bukan SiGoland)
+  SiGo,
   SiDocker,
   SiPostgresql,
   SiMongodb,
@@ -619,20 +605,13 @@ export default function Home() {
         ref: "Reflection",
         tools: "Tools",
       },
-      // hero: {
-      //   hello: "Hello everyone",
-      //   desc: "I am a 5th-semester student in the D4 Informatics Engineering program at Universitas Airlangga, with a strong interest in technology, particularly in UI/UX Design and Web Development. I have experience in creating user interface designs, developing web-based applications, and actively participating in student organizations and committees.",
-      //   cv: "Download CV",
-      //   more: "More",
-      // },
       hero: {
-        tagline: "Mobile Developer & UI/UX Designer", // TAMBAHAN BARU
+        tagline: "Mobile Developer & UI/UX Designer",
         hello: "Hi, I'm",
-        // Deskripsi diubah agar lebih 'action-oriented' sesuai CV
         desc: "An Informatics Engineering student passionate about crafting digital experiences. Currently building mobile apps with Flutter as an Intern at PT Multi Fabrindo and exploring modern web tech with Next.js.",
         cv: "Download Resume",
         more: "View Projects",
-        status: "🚀 Currently Intern at PT Multi Fabrindo", // TAMBAHAN BARU
+        status: "🚀 Currently Intern at PT Multi Fabrindo",
       },
       about: {
         title: "About Me",
@@ -704,20 +683,13 @@ export default function Home() {
         ref: "Refleksi",
         tools: "Tools",
       },
-      // hero: {
-      //   hello: "Halo semuanya",
-      //   desc: "Saya adalah mahasiswa semester 5 program studi D4 Teknik Informatika di Universitas Airlangga, dengan minat yang kuat pada teknologi, khususnya UI/UX Design dan Web Development. Saya memiliki pengalaman dalam membuat desain antarmuka pengguna, mengembangkan aplikasi berbasis web, dan aktif berpartisipasi dalam organisasi mahasiswa serta kepanitiaan.",
-      //   cv: "Unduh CV",
-      //   more: "Selengkapnya",
-      // },
       hero: {
-        tagline: "Mobile Developer & UI/UX Designer", // TAMBAHAN BARU
+        tagline: "Mobile Developer & UI/UX Designer",
         hello: "Halo, Saya",
-        // Deskripsi diubah lebih profesional
         desc: "Mahasiswa Teknik Informatika yang fokus menciptakan solusi digital. Saat ini aktif mengembangkan aplikasi mobile dengan Flutter sebagai Intern di PT Multi Fabrindo dan mengeksplorasi teknologi web modern.",
         cv: "Unduh CV",
         more: "Lihat Proyek",
-        status: "🚀 Sedang Magang di PT Multi Fabrindo", // TAMBAHAN BARU
+        status: "🚀 Sedang Magang di PT Multi Fabrindo",
       },
       about: {
         title: "Tentang Saya",
@@ -784,64 +756,6 @@ export default function Home() {
 
   const t = content[lang];
 
-  // --- UPDATE TECH STACK (Dengan Warna Brand) ---
-  // const techLogos = [
-  //   {
-  //     node: <SiReact style={{ color: "#61DAFB" }} />,
-  //     title: "React",
-  //     href: "https://react.dev"
-  //   },
-  //   {
-  //     node: <SiNextdotjs className="text-black dark:text-white" />, // Next.js tetap mengikuti tema (Hitam/Putih)
-  //     title: "Next.js",
-  //     href: "https://nextjs.org"
-  //   },
-  //   {
-  //     node: <SiTypescript style={{ color: "#3178C6" }} />,
-  //     title: "TypeScript",
-  //     href: "https://www.typescriptlang.org"
-  //   },
-  //   {
-  //     node: <SiTailwindcss style={{ color: "#06B6D4" }} />,
-  //     title: "Tailwind CSS",
-  //     href: "https://tailwindcss.com"
-  //   },
-  //   {
-  //     node: <SiFigma style={{ color: "#F24E1E" }} />,
-  //     title: "Figma",
-  //     href: "https://www.figma.com"
-  //   },
-  //   {
-  //     node: <SiFlutter style={{ color: "#02569B" }} />,
-  //     title: "Flutter",
-  //     href: "https://flutter.dev"
-  //   },
-  //   {
-  //     node: <SiGo style={{ color: "#00ADD8" }} />,
-  //     title: "Golang",
-  //     href: "https://go.dev"
-  //   },
-  //   {
-  //     node: <SiLaravel style={{ color: "#FF2D20" }} />,
-  //     title: "Laravel",
-  //     href: "https://laravel.com"
-  //   },
-  //   {
-  //     node: <SiPostgresql style={{ color: "#4169E1" }} />,
-  //     title: "PostgreSQL",
-  //     href: "https://www.postgresql.org"
-  //   },
-  //   {
-  //     node: <SiMongodb style={{ color: "#47A248" }} />,
-  //     title: "MongoDB",
-  //     href: "https://www.mongodb.com"
-  //   },
-  //   {
-  //     node: <SiDocker style={{ color: "#2496ED" }} />,
-  //     title: "Docker",
-  //     href: "https://www.docker.com"
-  //   },
-  // ];
   // --- UPDATE TECH STACK (Semua Skill, Berwarna, Satu Array) ---
   const techLogos = [
     // --- Web & Frontend ---
@@ -871,7 +785,6 @@ export default function Home() {
       title: "Next.js",
       href: "https://nextjs.org",
     },
-    // { node: <SiTailwindcss style={{ color: "#06B6D4" }} />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
     {
       node: <SiTailwindcss style={{ color: "#06B6D4" }} />,
       title: "Tailwind CSS",
@@ -901,7 +814,6 @@ export default function Home() {
     },
 
     // --- Backend & CMS ---
-    // { node: <SiGoland style={{ color: "#00ADD8" }} />, title: "Golang", href: "https://go.dev" }, // Pastikan import SiGo atau SiGoland
     {
       node: <SiGo style={{ color: "#00ADD8" }} />,
       title: "Golang",
@@ -1071,51 +983,6 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* === SECTION: HOME ===
-      <section id="home" className="relative z-10 flex items-center justify-center min-h-[85vh] bg-[var(--section-bg)] reveal transition-colors duration-300">
-        <div className="container hero relative">
-          <div className="z-10 max-w-2xl">
-            <div className="eyebrow text-[var(--accent)] font-semibold mb-2">{t.hero.hello}</div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-4">
-              Aleron <span className="text-[var(--accent)]">Maulana Firjatullah</span>
-            </h1>
-            <div style={{ height: "4px", width: "90px", background: "var(--accent)", margin: "12px 0 24px", borderRadius: "2px" }}></div>
-            <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed mb-8">{t.hero.desc}</p>
-            <div className="actions flex gap-4">
-              <a className="btn btn-primary px-6 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition" href="/assets/CV_Aleron Maulana F_EN.pdf" download>
-                ⬇ {t.hero.cv}
-              </a>
-              <a className="btn btn-ghost px-6 py-3 border border-current rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition" href="#snippets">
-                {t.hero.more}
-              </a>
-            </div>
-            <div className="socials flex gap-4 mt-8" aria-label="Sosial">
-              <a href="https://www.instagram.com/aleronmaulanaaa/" className="hover:scale-110 transition" aria-label="Instagram">
-                <svg width="24" height="24" viewBox="0 0 24 24" className="fill-gray-600 dark:fill-gray-300">
-                  <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm10 1.8a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM12 7a5 5 0 100 10 5 5 0 000-10z" />
-                </svg>
-              </a>
-              <a href="https://github.com/aleronmaulanaa" className="hover:scale-110 transition" aria-label="GitHub">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-gray-600 dark:fill-gray-300">
-                  <path d="M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.1 11.4.6.1.8-.3.8-.7 0-.4 0-1.4 0-2.7-3.3.7-4-1.6-4-1.6-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1.1 0 1.7 1.2 1.7 1.2 1.1 1.8 2.9 1.3 3.6.9 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.6 0-1.2.4-2.3 1.1-3.1-.1-.3-.5-.9-.2-1.8 0 0 1-.3 3.3 1.2 1-.3 2.1-.5 3.2-.5 1.1 0 2.2.2 3.2.5 2.3-1.5 3.3-1.2 3.3-1.2.3.9-.1 1.5-.2 1.8.7.8 1.1 1.9 1.1 3.1 0 4.3-2.8 5.3-5.5 5.6.4.4.8 1.2.8 2.3 0 1.6 0 2.9 0 3.3.1.5.3.7.8.7 4.7-1.6 8.1-6.1 8.1-11.4 0-6.6-5.4-12-12-12z" />
-                </svg>
-              </a>
-              <a href="http://www.linkedin.com/in/aleron-maulana-firjatullah-037200374" className="hover:scale-110 transition" aria-label="LinkedIn">
-                <svg width="24" height="24" viewBox="0 0 24 24" className="fill-gray-600 dark:fill-gray-300">
-                  <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.1h.1c.5-1 1.8-2.1 3.7-2.1 4 0 4.8 2.6 4.8 5.9V23h-4v-6.3c0-1.5 0-3.5-2.2-3.5-2.2 0-2.6 1.7-2.6 3.4V23h-4V8z" />
-                </svg>
-              </a>
-            </div>
-          </div>
-          <div className="absolute inset-0 flex justify-end items-center z-0 pointer-events-none opacity-20 md:opacity-100">
-            <div className="relative w-1/2 h-full flex justify-center items-center">
-              <div className="relative top-0 right-0 w-180 z-20">
-                <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
       {/* === SECTION: HOME (UPDATED) === */}
       <section
         id="home"
@@ -1368,24 +1235,39 @@ export default function Home() {
             className="filters reveal flex gap-4 mb-8 flex-wrap"
             id="filters"
           >
+            {/* Tombol ALL */}
             <button
               className="px-4 py-2 rounded-full bg-[var(--accent)] text-white font-medium"
               data-filter="all"
             >
               {t.proj.filters.all}
             </button>
+
+            {/* Tombol UI/UX (BARU: Ditambahkan di sini, sebelah kiri Web Dev) */}
+            <button
+              className="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 text-[var(--text-main)] hover:bg-gray-100 dark:hover:bg-gray-800"
+              data-filter="uiux"
+            >
+              {t.proj.filters.uiux}
+            </button>
+
+            {/* Tombol Web Dev */}
             <button
               className="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 text-[var(--text-main)] hover:bg-gray-100 dark:hover:bg-gray-800"
               data-filter="web"
             >
               {t.proj.filters.web}
             </button>
+
+            {/* Tombol Mobile App */}
             <button
               className="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 text-[var(--text-main)] hover:bg-gray-100 dark:hover:bg-gray-800"
               data-filter="app"
             >
               {t.proj.filters.app}
             </button>
+
+            {/* Tombol Backend */}
             <button
               className="px-4 py-2 rounded-full border border-gray-300 dark:border-gray-700 text-[var(--text-main)] hover:bg-gray-100 dark:hover:bg-gray-800"
               data-filter="backend"
@@ -1450,7 +1332,6 @@ export default function Home() {
               data-cat="backend"
             >
               <div className="relative h-48 w-full">
-                {/* Ganti dengan gambar kode backend jika ada, sementara pakai placeholder order.png */}
                 <Image
                   src="/assets/images/projects/order.png"
                   alt="Backend API"
@@ -1514,15 +1395,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* === TOOLS AND SKILLS SECTION (UPDATED COLOR) === */}
-      {/* <section id="tools" className="py-20 bg-[var(--bg-body)] text-[var(--text-main)] reveal transition-colors">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-10">{t.tools.title}</h2>
-          <div style={{ height: "200px", position: "relative", overflow: "hidden" }}>
-            <LogoLoop logos={techLogos} speed={120} direction="left" logoHeight={48} gap={40} pauseOnHover scaleOnHover fadeOut fadeOutColor="var(--bg-body)" ariaLabel="Technology partners" />
-          </div>
-        </div>
-      </section> */}
       {/* === TOOLS AND SKILLS SECTION (ANIMATED LOOP) === */}
       <section
         id="tools"
@@ -1535,24 +1407,24 @@ export default function Home() {
 
           <div
             style={{
-              height: "150px", // Tinggi area animasi
+              height: "150px",
               position: "relative",
               overflow: "hidden",
               maskImage:
-                "linear-gradient(to right, transparent, black 20%, black 80%, transparent)", // Efek fade di kiri-kanan
+                "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
               WebkitMaskImage:
                 "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
             }}
           >
             <LogoLoop
               logos={techLogos}
-              speed={100} // Kecepatan animasi (semakin kecil semakin cepat)
-              direction="left" // Arah gerak
-              logoHeight={50} // Ukuran logo
-              gap={60} // Jarak antar logo
+              speed={100}
+              direction="left"
+              logoHeight={50}
+              gap={60}
               pauseOnHover={true}
-              scaleOnHover={true} // Efek membesar saat di-hover
-              fadeOut={false} // Kita pakai maskImage CSS di atas agar lebih smooth
+              scaleOnHover={true}
+              fadeOut={false}
               ariaLabel="Technology Skills"
             />
           </div>
