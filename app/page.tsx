@@ -661,6 +661,10 @@ export default function Home() {
           cat: "Backend System (Golang)",
           title: "Student Achievement Reporting",
         },
+        card4: {
+          cat: "UI/UX Design",
+          title: "Smile Multifab - App Redesign", 
+        },
         cta: {
           title: "Have any project in mind?",
           avail: "I'm available for freelancing",
@@ -739,6 +743,10 @@ export default function Home() {
           cat: "Sistem Backend (Golang)",
           title: "Sistem Pelaporan Prestasi",
         },
+        card4: {
+          cat: "Desain UI/UX",
+          title: "Smile Multifab - Desain Aplikasi", 
+        },
         cta: {
           title: "Punya ide proyek?",
           avail: "Saya tersedia untuk freelance",
@@ -781,6 +789,12 @@ export default function Home() {
       categories: ["backend"],
       image: "/assets/images/projects/order.png",
       contentKey: "card3",
+    },
+    {
+      id: 4,
+      categories: ["uiux"], // Hanya akan muncul di filter 'All' dan 'UI/UX'
+      image: "/assets/images/projects/uiux-design.png", // Ganti dengan nama file gambar Anda nanti
+      contentKey: "card4", 
     },
   ];
 
