@@ -35,24 +35,28 @@
 // }
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import "../public/css/style.css";
-import Script from "next/script"; // ✅ import Script dari Next.js
+import Script from "next/script";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["400", "600", "700", "800", "900"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Portofolio Pribadi Saya",
+  title: "Aleron Maulana — Portfolio",
+  description: "Full-stack Developer & UI/UX Designer",
 };
 
 export default function RootLayout({
@@ -62,12 +66,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable ?? ""} ${geistMono.variable ?? ""} antialiased`}
-      >
+      <body className={`${playfair.variable} ${dmSans.variable} antialiased`}>
         {children}
-
-        {/* ✅ Tambahkan script JS dari public/js */}
         <Script src="/js/script.js" strategy="afterInteractive" />
       </body>
     </html>

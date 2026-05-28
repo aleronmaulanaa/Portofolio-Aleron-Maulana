@@ -4,34 +4,47 @@
 :root {
   /* --- MODE TERANG (DEFAULT) --- */
   --bg: #ffffff;
-  --text: #1a1a1a;
-  --muted: #4b5563; /* Gray-600 */
-  --panel: #ffffff; /* Card Background */
-  --panel-gradient: linear-gradient(180deg, #ffffff, #f9fafb);
-  --border: #e5e7eb; /* Border tipis abu-abu */
-  --nav-bg: rgba(255, 255, 255, 0.85);
-  --nav-scrolled: rgba(255, 255, 255, 0.95);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Shadow lebih halus di mode terang */
-  
-  --accent: #16a34a; /* Hijau sedikit lebih gelap agar kontras di putih */
-  --accent-2: #0d9488;
+  --bg-body: #ffffff;
+  --section-bg: #f5f9ff;
+  --text: #111827;
+  --text-main: #111827;
+  --muted: #4b5563;
+  --panel: #ffffff;
+  --panel-gradient: linear-gradient(180deg, #ffffff, #f8fafc);
+  --border: #e2eaf4;
+  --nav-bg: rgba(255, 255, 255, 0.88);
+  --nav-scrolled: rgba(255, 255, 255, 0.97);
+  --shadow: 0 10px 30px rgba(46, 111, 181, 0.08);
+
+  /* Blue accent palette */
+  --accent: #2E6FB5;          /* primary interactive — passes WCAG AA on white */
+  --accent-hover: #1A4A7A;    /* darker on hover/press */
+  --accent-soft: #C0DAF5;     /* decorative backgrounds, shapes, hero bg text */
+  --accent-tint: #EEF5FD;     /* light section tint */
+  --accent-2: #5B9BD5;        /* secondary blue */
   --radius: 16px;
 }
 
 /* --- MODE GELAP (Override saat ada class .dark) --- */
 .dark {
-  --bg: #1f1f1f;
-  --text: #e8e8e8;
-  --muted: #a3a3a3;
-  --panel: #2a2a2a;
-  --panel-gradient: linear-gradient(180deg, #2b2b2b, #242424);
-  --border: rgba(255, 255, 255, 0.08);
-  --nav-bg: rgba(31, 31, 31, 0.85);
-  --nav-scrolled: rgba(31, 31, 31, 0.95);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  
-  --accent: #22c55e; /* Hijau neon original Anda */
-  --accent-2: #14b8a6;
+  --bg: #0f1923;
+  --bg-body: #0f1923;
+  --section-bg: #151f2e;
+  --text: #e8edf4;
+  --text-main: #e8edf4;
+  --muted: #8fa3be;
+  --panel: #1a2535;
+  --panel-gradient: linear-gradient(180deg, #1c2840, #16202f);
+  --border: rgba(192, 218, 245, 0.10);
+  --nav-bg: rgba(15, 25, 35, 0.88);
+  --nav-scrolled: rgba(15, 25, 35, 0.97);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+
+  --accent: #5B9BD5;
+  --accent-hover: #82B8E8;
+  --accent-soft: rgba(192, 218, 245, 0.15);
+  --accent-tint: #151f2e;
+  --accent-2: #82B8E8;
 }
 
 /* =========================================
@@ -42,7 +55,7 @@ html, body { height: 100%; }
 
 body {
   margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, sans-serif;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif;
   color: var(--text);
   background: var(--bg);
   line-height: 1.6;
@@ -179,8 +192,7 @@ section { padding: 80px 0; scroll-margin-top: 86px; }
   color: #fff; /* Teks putih agar kontras dengan hijau */
   border-color: transparent;
 }
-/* Khusus dark mode teks primary jadi hitam agar lebih pop */
-.dark .btn-primary { color: #0b1b0f; }
+.dark .btn-primary { color: #ffffff; }
 
 .btn-primary:hover { filter: brightness(1.1); }
 .btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
@@ -204,7 +216,7 @@ section { padding: 80px 0; scroll-margin-top: 86px; }
 .blob {
   position: absolute; inset: auto; left: 50%; top: 50%;
   width: 140%; height: 140%;
-  background: radial-gradient(50% 50% at 50% 50%, rgba(34,197,94,.4), rgba(34,197,94,.05) 60%, transparent 70%);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(192,218,245,.45), rgba(91,155,213,.06) 60%, transparent 70%);
   filter: blur(30px); transform: translate(-50%, -50%);
   animation: float 6s ease-in-out infinite;
   z-index: 0;
@@ -262,7 +274,7 @@ section { padding: 80px 0; scroll-margin-top: 86px; }
   color: #fff;
   border-color: transparent;
 }
-.dark .chip.active { color: #0b1b0f; }
+.dark .chip.active { color: #ffffff; }
 
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
 
