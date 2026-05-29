@@ -377,6 +377,36 @@ footer {
 }
 
 /* =========================================
+   10c. BENTO CARD & MOVING BORDER ANIMATIONS
+   ========================================= */
+@keyframes bentoReveal {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Card selalu terlihat; animasi hanya efek tambahan */
+.bento-card {
+  animation: bentoReveal 0.5s ease both;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(46,111,181,0.16), 0 2px 8px rgba(0,0,0,0.08) !important;
+}
+
+/* Jika animasi belum selesai tetap visible (fallback) */
+@media (prefers-reduced-motion: reduce) {
+  .bento-card { animation: none; }
+}
+
+
+@keyframes movingBorderBg {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+/* =========================================
    11. RESPONSIVE MEDIA QUERIES
    ========================================= */
 @media (max-width: 980px) {

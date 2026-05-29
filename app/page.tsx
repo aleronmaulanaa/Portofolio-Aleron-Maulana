@@ -1528,10 +1528,11 @@ import {
 } from "react-icons/si";
 // Import Icon UI
 import { FiSun, FiMoon } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 export default function Home() {
   // --- LOGIC DARK MODE ---
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -1543,7 +1544,7 @@ export default function Home() {
         document.documentElement.classList.remove("dark");
       }
     } else {
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
@@ -2074,11 +2075,11 @@ export default function Home() {
           Phase 1 — card shrinks while pinned (GSAP pin: true)
           Phase 2 — 3-column layout scrolls in after pin releases
           ========================================================= */}
-      <section id="home" style={{ background: "#F4F9FF", padding: 0 }}>
+      <section id="home" style={{ background: "#F4F9FF", padding: 0, position: "relative", overflow: "hidden" }}>
         {/* ── Phase 1: Pinned stage ── */}
         <div
           id="hero-pin-stage"
-          style={{ position: "relative", height: "100vh", overflow: "hidden" }}
+          style={{ position: "relative", height: "100vh", overflow: "hidden", isolation: "isolate" }}
         >
 
           {/* === HERO CARD: bg text + portrait (scales as one unit via GSAP) === */}
@@ -2145,7 +2146,7 @@ export default function Home() {
             <p className="text-sm font-medium mb-3" style={{ color: "var(--muted)" }}>{t.hero.tagline}</p>
             <p className="text-xs leading-relaxed mb-5" style={{ color: "var(--muted)", maxWidth: "280px" }}>{t.hero.desc}</p>
             <div className="flex gap-2 flex-wrap mb-5">
-              <a href="/assets/CV_Aleron Maulana F_EN.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)" }}>
+              <a href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)" }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 {t.hero.cv}
               </a>
@@ -2209,7 +2210,7 @@ export default function Home() {
               </h1>
               <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>{t.hero.tagline}</p>
               <div className="flex gap-2 justify-center flex-wrap mb-3">
-                <a href="/assets/CV_Aleron Maulana F_EN.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)" }}>{t.hero.cv}</a>
+                <a href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)" }}>{t.hero.cv}</a>
                 <a href="#projects" className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold" style={{ border: "1.5px solid var(--border)", color: "var(--text-main)" }}>{t.hero.more}</a>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
@@ -2246,7 +2247,7 @@ export default function Home() {
             <p style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--muted)", marginBottom: "12px" }}>{t.hero.tagline}</p>
             <p style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--muted)", maxWidth: "300px", marginBottom: "24px" }}>{t.hero.desc}</p>
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "24px" }}>
-              <a href="/assets/CV_Aleron Maulana F_EN.pdf" download style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "10px 22px", borderRadius: "999px", fontSize: "13px", fontWeight: 600, color: "#fff", background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)", textDecoration: "none" }}>
+              <a href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "10px 22px", borderRadius: "999px", fontSize: "13px", fontWeight: 600, color: "#fff", background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)", textDecoration: "none" }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 {t.hero.cv}
               </a>
@@ -2274,25 +2275,33 @@ export default function Home() {
       </section>
 
       {/* =========================================================
-          2. SECTION: TOOLS AND SKILLS (Dipindah ke Urutan 2) 
+          2. SECTION: TOOLS & SKILLS — BENTO GRID
           ========================================================= */}
       <section
         id="tools"
-        className="py-20 bg-[var(--bg-body)] text-[var(--text-main)] reveal transition-colors"
+        className="py-24 text-[var(--text-main)] transition-colors"
+        style={{ background: "var(--bg-body)" }}
       >
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-10">
-            {t.tools.title}
-          </h2>
+
+          {/* Header */}
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold tracking-[0.18em] uppercase mb-2" style={{ color: "var(--accent)" }}>
+              {lang === "en" ? "What I Work With" : "Yang Saya Gunakan"}
+            </p>
+            <h2 style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 800, color: "var(--text-main)", letterSpacing: "-0.02em" }}>
+              {t.tools.title}
+            </h2>
+          </div>
+
+          {/* Logo Marquee */}
           <div
             style={{
-              height: "150px",
+              height: "130px",
               position: "relative",
               overflow: "hidden",
-              maskImage:
-                "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
-              WebkitMaskImage:
-                "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+              maskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
             }}
           >
             <LogoLoop
@@ -2306,6 +2315,95 @@ export default function Home() {
               fadeOut={false}
               ariaLabel="Technology Skills"
             />
+          </div>
+
+          {/* Bento Grid — 4-col on desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-12">
+
+            {[
+              {
+                span: "md:col-span-2", delay: "0s",
+                icon: <SiFigma style={{ color: "#F24E1E", fontSize: 20 }} />,
+                title: "UI/UX Design", sub: "Design & Prototyping",
+                tags: ["Figma", "Wireframing", "Interactive Prototyping", "User Persona", "Design System", "Auto Layout", "Component & Variant Systems"],
+              },
+              {
+                span: "md:col-span-1", delay: "0.07s",
+                icon: <SiFlutter style={{ color: "#02569B", fontSize: 20 }} />,
+                title: "Mobile Dev", sub: "Cross-platform Apps",
+                tags: ["Flutter", "Dart"],
+              },
+              {
+                span: "md:col-span-1", delay: "0.14s",
+                icon: <SiReact style={{ color: "#61DAFB", fontSize: 20 }} />,
+                title: "Frontend Dev", sub: "Interfaces & Web",
+                tags: ["HTML", "CSS", "JavaScript", "React", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap", "NativeScript", "Responsive Design"],
+              },
+              {
+                span: "md:col-span-1", delay: "0.21s",
+                icon: <SiNodedotjs style={{ color: "#339933", fontSize: 20 }} />,
+                title: "Backend Dev", sub: "APIs & Server-side",
+                tags: ["Laravel", "PHP", "Node.js", "Go (Golang)", "WordPress", "API Integration", "CMS"],
+              },
+              {
+                span: "md:col-span-1", delay: "0.28s",
+                icon: <SiPostgresql style={{ color: "#4169E1", fontSize: 20 }} />,
+                title: "Database", sub: "Data Storage",
+                tags: ["PostgreSQL", "MySQL", "MongoDB", "SQLite", "Supabase", "Firebase"],
+              },
+              {
+                span: "md:col-span-2", delay: "0.35s",
+                icon: <SiDocker style={{ color: "#2496ED", fontSize: 20 }} />,
+                title: "DevOps & Tools", sub: "Deployment & Workflow",
+                tags: ["Git", "GitHub", "Docker (Multi-Container)", "Vercel", "Postman", "Figma", "Canva", "Kaggle"],
+              },
+            ].map(({ span, delay, icon, title, sub, tags }) => (
+              <div
+                key={title}
+                className={`${span} rounded-2xl p-6 bento-card`}
+                style={{ background: "var(--panel)", border: "1px solid var(--border)", boxShadow: "0 4px 20px rgba(46,111,181,0.10), 0 1px 4px rgba(0,0,0,0.06)", animationDelay: delay }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "var(--accent-tint)" }}>
+                    {icon}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm leading-tight" style={{ color: "var(--text-main)" }}>{title}</h3>
+                    <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{sub}</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map(tag => (
+                    <span key={tag} className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--accent-soft)" }}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* CARD 7 — AI-Assisted Dev (full width, animated gradient border) */}
+            <div
+              className="md:col-span-4 rounded-[18px] p-[2px] bento-card"
+              style={{ background: "linear-gradient(135deg, #2E6FB5, #C0DAF5, #5B9BD5, #2E6FB5)", backgroundSize: "300% 300%", animation: "movingBorderBg 4s ease infinite", animationDelay: "0.42s" }}
+            >
+              <div className="rounded-[16px] p-6" style={{ background: "var(--panel)" }}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #2E6FB5, #5B9BD5)" }}>
+                    <span className="text-white text-base select-none">✨</span>
+                  </div>
+                  <div className="flex-1 flex items-center gap-3 flex-wrap">
+                    <h3 className="font-bold text-sm leading-tight" style={{ color: "var(--text-main)" }}>AI-Assisted Development</h3>
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold" style={{ background: "linear-gradient(90deg,#2E6FB5,#5B9BD5)", color: "#fff" }}>Featured</span>
+                    <p className="text-xs w-full -mt-1" style={{ color: "var(--muted)" }}>Modern AI-powered workflows</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {["Vibe Coding", "Prompt Engineering for Developers", "Claude", "Cursor", "Gemini", "AI-Powered Tools"].map(tag => (
+                    <span key={tag} className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--accent)", color: "#fff" }}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>

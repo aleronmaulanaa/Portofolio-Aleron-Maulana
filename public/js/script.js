@@ -71,6 +71,7 @@
         // Testimonials slider (auto + dots)
         const slides = document.getElementById('slides');
         const dotsWrap = document.getElementById('dots');
+        if(!slides || !dotsWrap) return; // section tidak ada, skip
         const total = slides.children.length;
         let i = 0, timer;
         function buildDots(){
