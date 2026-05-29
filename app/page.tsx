@@ -1600,8 +1600,8 @@ export default function Home() {
         });
 
         tl.to("#hero-card", {
-          scale: 0.28,
-          borderRadius: 80,
+          scale: 0.42,
+          borderRadius: 64,
           boxShadow: "0 40px 120px rgba(46,111,181,0.25)",
           ease: "none",
           duration: 1,
@@ -1613,6 +1613,26 @@ export default function Home() {
           ease: "none",
           duration: 0.18,
         }, 0);
+
+        // Entrance animation: hero-state2 panels fade in when scrolled into view
+        gsap.set("#hero-state2-left > *", { opacity: 0, x: -40, y: 12 });
+        gsap.set("#hero-state2-right", { opacity: 0, x: 60 });
+
+        ScrollTrigger.create({
+          trigger: "#hero-state2",
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            gsap.to("#hero-state2-left > *", {
+              opacity: 1, x: 0, y: 0,
+              duration: 0.65, ease: "power2.out", stagger: 0.08,
+            });
+            gsap.to("#hero-state2-right", {
+              opacity: 1, x: 0,
+              duration: 0.75, ease: "power2.out", delay: 0.2,
+            });
+          },
+        });
 
         return () => ScrollTrigger.getAll().forEach((t) => t.kill());
       });
@@ -2211,7 +2231,7 @@ export default function Home() {
           style={{ minHeight: "100vh", alignItems: "center", background: "#F4F9FF" }}
         >
           {/* LEFT: text + buttons + socials */}
-          <div style={{ flex: "0 0 36%", padding: "0 32px 0 64px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <div id="hero-state2-left" style={{ flex: "0 0 50%", padding: "0 48px 0 80px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", alignSelf: "flex-start", marginBottom: "20px", padding: "6px 14px", borderRadius: "999px", fontSize: "12px", fontWeight: 600, background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
               <span style={{ position: "relative", display: "flex", height: "8px", width: "8px", flexShrink: 0 }}>
                 <span className="animate-ping" style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "var(--accent)", opacity: 0.75 }} />
@@ -2245,23 +2265,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CENTER: small card (portrait + bg text) */}
-          <div style={{ flex: "0 0 28%", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0" }}>
-            <div style={{ width: "min(360px,90%)", aspectRatio: "3/4", background: "var(--bg-body)", borderRadius: "24px", overflow: "hidden", boxShadow: "0 40px 120px rgba(46,111,181,0.20)", position: "relative", border: "1px solid var(--border)" }}>
-              <div aria-hidden="true" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none", userSelect: "none" }}>
-                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "58px", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Full-</span>
-                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "52px", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>stack</span>
-                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "40px", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Dev &amp;</span>
-                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "30px", fontWeight: 900, color: "#C0DAF5", lineHeight: 1, letterSpacing: "-0.02em", display: "block", textAlign: "center" }}>UI/UX</span>
-              </div>
-              <Image src="/assets/images/aleron-portrait.png" alt="Aleron Maulana" width={400} height={533}
-                style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", height: "115%", width: "auto", objectFit: "contain", objectPosition: "top center", display: "block", zIndex: 2 }}
-              />
-            </div>
-          </div>
-
           {/* RIGHT: Lanyard */}
-          <div style={{ flex: "0 0 36%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div id="hero-state2-right" style={{ flex: "0 0 50%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 80px 0 48px" }}>
             <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
           </div>
         </div>
