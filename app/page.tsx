@@ -1488,7 +1488,7 @@
 // }
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Script from "next/script";
 import "../public/css/style.css";
@@ -1577,6 +1577,53 @@ export default function Home() {
 
   // --- LOGIC FILTER PROJECT ---
   const [activeFilter, setActiveFilter] = useState("all");
+
+  // --- GSAP HERO SCROLL ANIMATION (pin-based two-phase) ---
+  useEffect(() => {
+    const init = async () => {
+      const { default: gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      gsap.registerPlugin(ScrollTrigger);
+
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        // Phase 1: pin #hero-pin-stage, shrink the card
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#hero-pin-stage",
+            pin: true,
+            pinSpacing: true,
+            start: "top top",
+            end: "+=800",
+            scrub: 1.5,
+          },
+        });
+
+        tl.to("#hero-card", {
+          scale: 0.28,
+          borderRadius: 80,
+          boxShadow: "0 40px 120px rgba(46,111,181,0.25)",
+          ease: "none",
+          duration: 1,
+        }, 0);
+
+        tl.to("#hero-scroll-hint", {
+          opacity: 0,
+          y: 10,
+          ease: "none",
+          duration: 0.18,
+        }, 0);
+
+        return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+      });
+
+      return () => mm.revert();
+    };
+
+    let cleanup: (() => void) | undefined;
+    init().then((fn) => { cleanup = fn; });
+    return () => { cleanup?.(); };
+  }, []);
 
   // --- KAMUS KONTEN ---
   const content = {
@@ -2004,301 +2051,221 @@ export default function Home() {
 
       {/* =========================================================
           1. SECTION: HERO
+          Phase 1 — card shrinks while pinned (GSAP pin: true)
+          Phase 2 — 3-column layout scrolls in after pin releases
           ========================================================= */}
-      <section
-        id="home"
-        className="relative overflow-hidden transition-colors duration-300"
-        style={{
-          minHeight: "100vh",
-          background: "var(--bg-body)",
-          display: "flex",
-          alignItems: "stretch",
-        }}
-      >
-        {/* Grain texture overlay */}
+      <section id="home" style={{ background: "#F4F9FF", padding: 0 }}>
+        {/* ── Phase 1: Pinned stage ── */}
         <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
-            backgroundRepeat: "repeat",
-            backgroundSize: "128px 128px",
-            opacity: 0.6,
-          }}
-        />
-
-        {/* Left panel — text content */}
-        <div
-          className="relative z-10 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-24 w-full md:w-1/2"
-          style={{ minHeight: "100vh" }}
+          id="hero-pin-stage"
+          style={{ position: "relative", height: "100vh", overflow: "hidden" }}
         >
-          {/* Status pill */}
+
+          {/* === HERO CARD: bg text + portrait (scales as one unit via GSAP) === */}
           <div
-            className="inline-flex items-center gap-2 self-start px-4 py-1.5 rounded-full text-xs font-semibold mb-8 tracking-wide"
+            id="hero-card"
             style={{
-              background: "var(--accent-tint)",
-              color: "var(--accent)",
-              border: "1px solid var(--border)",
+              position: "absolute",
+              top: 0, left: 0,
+              width: "100vw", height: "100vh",
+              overflow: "hidden",
+              willChange: "transform",
+              zIndex: 5,
+              transformOrigin: "center center",
             }}
           >
-            <span className="relative flex h-2 w-2 flex-shrink-0">
-              <span
-                className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                style={{ background: "var(--accent)" }}
-              />
-              <span
-                className="relative inline-flex rounded-full h-2 w-2"
-                style={{ background: "var(--accent)" }}
-              />
-            </span>
-            🚀 {t.hero.status}
-          </div>
+            {/* White card surface — child scales with parent transform */}
+            <div style={{ position: "absolute", inset: 0, background: "var(--bg-body)", zIndex: 0 }} />
 
-          {/* Eyebrow */}
-          <p
-            className="text-base font-semibold mb-2 tracking-widest uppercase"
-            style={{ color: "var(--accent)", fontFamily: "var(--font-dm-sans, 'DM Sans', sans-serif)" }}
-          >
-            {t.hero.hello}
-          </p>
-
-          {/* Name */}
-          <h1
-            className="leading-none mb-4"
-            style={{
-              fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
-              fontSize: "clamp(3rem, 7vw, 6.5rem)",
-              fontWeight: 900,
-              color: "var(--text-main)",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Aleron{" "}
-            <span style={{ color: "var(--accent)" }}>Maulana F.</span>
-          </h1>
-
-          {/* Tagline */}
-          <p
-            className="text-lg md:text-2xl font-medium mb-6"
-            style={{ color: "var(--muted)" }}
-          >
-            {t.hero.tagline}
-          </p>
-
-          {/* Description */}
-          <p
-            className="text-base leading-relaxed mb-8 max-w-md"
-            style={{ color: "var(--muted)" }}
-          >
-            {t.hero.desc}
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex gap-3 flex-wrap mb-8">
-            <a
-              href="/assets/CV_Aleron Maulana F_EN.pdf"
-              download
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+            {/* Typographic background text */}
+            <div
+              aria-hidden="true"
               style={{
-                background: "var(--accent)",
-                boxShadow: "0 4px 20px rgba(46,111,181,0.3)",
-              }}
-              onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.background = "var(--accent-hover)")}
-              onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.background = "var(--accent)")}
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              {t.hero.cv}
-            </a>
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
-              style={{
-                background: "transparent",
-                border: "1.5px solid var(--border)",
-                color: "var(--text-main)",
-              }}
-              onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.borderColor = "var(--accent)")}
-              onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.borderColor = "var(--border)")}
-            >
-              {t.hero.more}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </a>
-          </div>
-
-          {/* Social links */}
-          <div className="flex gap-3" aria-label="Social links">
-            {[
-              {
-                href: "https://www.instagram.com/aleronmaulanaaa/",
-                label: "Instagram",
-                path: "M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm10 1.8a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM12 7a5 5 0 100 10 5 5 0 000-10z",
-              },
-              {
-                href: "https://github.com/aleronmaulanaa",
-                label: "GitHub",
-                path: "M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.1 11.4.6.1.8-.3.8-.7 0-.4 0-1.4 0-2.7-3.3.7-4-1.6-4-1.6-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1.1 0 1.7 1.2 1.7 1.2 1.1 1.8 2.9 1.3 3.6.9 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.6 0-1.2.4-2.3 1.1-3.1-.1-.3-.5-.9-.2-1.8 0 0 1-.3 3.3 1.2 1-.3 2.1-.5 3.2-.5 1.1 0 2.2.2 3.2.5 2.3-1.5 3.3-1.2 3.3-1.2.3.9-.1 1.5-.2 1.8.7.8 1.1 1.9 1.1 3.1 0 4.3-2.8 5.3-5.5 5.6.4.4.8 1.2.8 2.3 0 1.6 0 2.9 0 3.3.1.5.3.7.8.7 4.7-1.6 8.1-6.1 8.1-11.4 0-6.6-5.4-12-12-12z",
-              },
-              {
-                href: "http://www.linkedin.com/in/aleron-maulana-firjatullah-037200374",
-                label: "LinkedIn",
-                path: "M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.1h.1c.5-1 1.8-2.1 3.7-2.1 4 0 4.8 2.6 4.8 5.9V23h-4v-6.3c0-1.5 0-3.5-2.2-3.5-2.2 0-2.6 1.7-2.6 3.4V23h-4V8z",
-              },
-            ].map(({ href, label, path }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-                style={{
-                  border: "1.5px solid var(--border)",
-                  background: "var(--panel)",
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "var(--accent)";
-                  (e.currentTarget as HTMLAnchorElement).style.background = "var(--accent-tint)";
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = "var(--border)";
-                  (e.currentTarget as HTMLAnchorElement).style.background = "var(--panel)";
-                }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ color: "var(--muted)" }}>
-                  <path d={path} />
-                </svg>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Right panel — portrait + background text + Lanyard */}
-        <div
-          className="hidden md:flex relative w-1/2 items-center justify-center overflow-hidden"
-          style={{ minHeight: "100vh" }}
-        >
-          {/* Giant background text layer */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 flex flex-col items-center justify-center select-none pointer-events-none overflow-hidden px-4"
-          >
-            <span
-              className="text-center font-black leading-none whitespace-nowrap"
-              style={{
-                fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
-                fontSize: "clamp(3rem, 6.5vw, 7.5rem)",
-                color: "var(--accent-soft)",
-                opacity: 1,
-                letterSpacing: "-0.03em",
-                lineHeight: 0.95,
+                position: "absolute", inset: 0,
+                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                pointerEvents: "none", userSelect: "none", zIndex: 1,
               }}
             >
-              Full-stack
-            </span>
-            <span
-              className="text-center font-black leading-none whitespace-nowrap"
-              style={{
-                fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
-                fontSize: "clamp(2.5rem, 5.5vw, 6rem)",
-                color: "var(--accent-soft)",
-                opacity: 1,
-                letterSpacing: "-0.03em",
-                lineHeight: 0.95,
-              }}
-            >
-              Developer
-            </span>
-            <span
-              className="text-center font-black leading-none whitespace-nowrap"
-              style={{
-                fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
-                fontSize: "clamp(1.8rem, 4vw, 4.5rem)",
-                color: "var(--accent-soft)",
-                opacity: 1,
-                letterSpacing: "-0.02em",
-                lineHeight: 1.1,
-              }}
-            >
-              &amp; UI/UX Designer
-            </span>
-          </div>
+              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "16vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Full-stack</span>
+              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "13vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Developer &amp;</span>
+              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "9.5vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 1, letterSpacing: "-0.02em", display: "block", textAlign: "center" }}>UI/UX Designer</span>
+            </div>
 
-          {/* Portrait — sits in front of background text */}
-          <div className="relative z-10 flex items-end justify-center w-full h-full">
+            {/* Portrait — 150vh tall so overflow:hidden clips below waist */}
             <Image
               src="/assets/images/aleron-portrait.png"
               alt="Aleron Maulana Firjatullah"
-              width={520}
-              height={680}
-              priority
-              className="object-contain object-bottom"
-              style={{
-                maxHeight: "88vh",
-                width: "auto",
-                filter: "drop-shadow(0 20px 60px rgba(46,111,181,0.12))",
-              }}
+              width={520} height={700} priority
+              style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", height: "150vh", width: "auto", objectFit: "contain", objectPosition: "top center", display: "block", zIndex: 2 }}
             />
           </div>
 
-          {/* Lanyard — sticky on right, appears on scroll */}
+          {/* === LEFT PANEL (State 2 — slides in from left) === */}
           <div
-            id="lanyard-panel"
-            className="absolute top-0 right-0 z-20 w-full h-full flex items-center justify-end pointer-events-none"
-            style={{ opacity: 0, transition: "opacity 0.6s ease" }}
+            id="hero-left"
+            style={{
+              position: "absolute", left: 0, top: 0,
+              width: "36%", height: "100vh",
+              display: "flex", flexDirection: "column", justifyContent: "center",
+              padding: "0 32px 0 52px",
+              zIndex: 10, opacity: 0, pointerEvents: "none",
+            }}
           >
-            <div className="pointer-events-auto" style={{ width: "100%", height: "100%" }}>
+            <div className="inline-flex items-center gap-2 self-start mb-5 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide" style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
+              <span className="relative flex h-2 w-2 flex-shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: "var(--accent)" }} />
+                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: "var(--accent)" }} />
+              </span>
+              🚀 {t.hero.status}
+            </div>
+            <p className="text-xs font-semibold mb-2 tracking-widest uppercase" style={{ color: "var(--accent)" }}>{t.hero.hello}</p>
+            <h1 style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "clamp(1.8rem,3.2vw,3.8rem)", fontWeight: 900, color: "var(--text-main)", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "8px" }}>
+              Aleron<br /><span style={{ color: "var(--accent)" }}>Maulana F.</span>
+            </h1>
+            <p className="text-sm font-medium mb-3" style={{ color: "var(--muted)" }}>{t.hero.tagline}</p>
+            <p className="text-xs leading-relaxed mb-5" style={{ color: "var(--muted)", maxWidth: "280px" }}>{t.hero.desc}</p>
+            <div className="flex gap-2 flex-wrap mb-5">
+              <a href="/assets/CV_Aleron Maulana F_EN.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                {t.hero.cv}
+              </a>
+              <a href="#projects" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold" style={{ border: "1.5px solid var(--border)", color: "var(--text-main)" }}>{t.hero.more}</a>
+            </div>
+            <div className="flex gap-2">
+              {[
+                { href: "https://www.instagram.com/aleronmaulanaaa/", label: "Instagram", path: "M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm10 1.8a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM12 7a5 5 0 100 10 5 5 0 000-10z" },
+                { href: "https://github.com/aleronmaulanaa", label: "GitHub", path: "M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.1 11.4.6.1.8-.3.8-.7 0-.4 0-1.4 0-2.7-3.3.7-4-1.6-4-1.6-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1.1 0 1.7 1.2 1.7 1.2 1.1 1.8 2.9 1.3 3.6.9 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.6 0-1.2.4-2.3 1.1-3.1-.1-.3-.5-.9-.2-1.8 0 0 1-.3 3.3 1.2 1-.3 2.1-.5 3.2-.5 1.1 0 2.2.2 3.2.5 2.3-1.5 3.3-1.2 3.3-1.2.3.9-.1 1.5-.2 1.8.7.8 1.1 1.9 1.1 3.1 0 4.3-2.8 5.3-5.5 5.6.4.4.8 1.2.8 2.3 0 1.6 0 2.9 0 3.3.1.5.3.7.8.7 4.7-1.6 8.1-6.1 8.1-11.4 0-6.6-5.4-12-12-12z" },
+                { href: "http://www.linkedin.com/in/aleron-maulana-firjatullah-037200374", label: "LinkedIn", path: "M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.1h.1c.5-1 1.8-2.1 3.7-2.1 4 0 4.8 2.6 4.8 5.9V23h-4v-6.3c0-1.5 0-3.5-2.2-3.5-2.2 0-2.6 1.7-2.6 3.4V23h-4V8z" },
+              ].map(({ href, label, path }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="flex items-center justify-center w-8 h-8 rounded-full" style={{ border: "1.5px solid var(--border)", background: "var(--panel)" }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ color: "var(--muted)" }}><path d={path} /></svg>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* === RIGHT PANEL — Lanyard (State 2) === */}
+          <div
+            id="hero-right"
+            style={{
+              position: "absolute", right: 0, top: 0,
+              width: "36%", height: "100vh",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              zIndex: 10, opacity: 0, pointerEvents: "none",
+            }}
+          >
+            <div style={{ width: "100%", height: "100%" }}>
               <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
             </div>
           </div>
-        </div>
 
-        {/* Mobile: portrait stacked above content */}
-        <div
-          className="md:hidden absolute top-0 left-0 w-full z-0 flex justify-center items-end pointer-events-none"
-          style={{ height: "45vh" }}
-          aria-hidden="true"
-        >
-          {/* Mobile giant bg text */}
+          {/* === SCROLL HINT (fades out on scroll) === */}
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center px-4"
-            style={{ fontFamily: "var(--font-playfair, 'Playfair Display', serif)" }}
+            id="hero-scroll-hint"
+            style={{ position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)", zIndex: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}
           >
-            <span className="text-5xl font-black leading-none" style={{ color: "var(--accent-soft)" }}>Full-stack</span>
-            <span className="text-4xl font-black leading-none" style={{ color: "var(--accent-soft)" }}>Developer</span>
+            <span style={{ color: "var(--muted)", fontSize: "10px", letterSpacing: "0.15em", fontWeight: 600 }}>SCROLL</span>
+            <div className="hero-scroll-hint">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--muted)" }}>
+                <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+              </svg>
+            </div>
           </div>
-          <Image
-            src="/assets/images/aleron-portrait.png"
-            alt=""
-            width={280}
-            height={360}
-            className="object-contain object-bottom relative z-10"
-            style={{ maxHeight: "100%", width: "auto" }}
-          />
+
+          {/* === MOBILE FALLBACK (< 768px) === */}
+          <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center px-6 pt-20 pb-10 gap-6">
+            <div style={{ position: "relative", width: "200px", zIndex: 5, flexShrink: 0 }}>
+              <div aria-hidden="true" style={{ position: "absolute", inset: "-20px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "10vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9 }}>Full-stack</span>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "8vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9 }}>Dev &amp;</span>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "6vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 1 }}>UI/UX</span>
+              </div>
+              <Image src="/assets/images/aleron-portrait.png" alt="Aleron Maulana" width={200} height={280} style={{ width: "100%", height: "auto", position: "relative", zIndex: 2 }} />
+            </div>
+            <div className="text-center z-10">
+              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--accent)" }}>{t.hero.hello}</p>
+              <h1 style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "2.2rem", fontWeight: 900, color: "var(--text-main)", lineHeight: 1.05, marginBottom: "8px" }}>
+                Aleron <span style={{ color: "var(--accent)" }}>Maulana F.</span>
+              </h1>
+              <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>{t.hero.tagline}</p>
+              <div className="flex gap-2 justify-center flex-wrap mb-3">
+                <a href="/assets/CV_Aleron Maulana F_EN.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)" }}>{t.hero.cv}</a>
+                <a href="#projects" className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold" style={{ border: "1.5px solid var(--border)", color: "var(--text-main)" }}>{t.hero.more}</a>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: "var(--accent)" }} />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: "var(--accent)" }} />
+                </span>
+                🚀 {t.hero.status}
+              </div>
+            </div>
+          </div>
+
+        </div>{/* end #hero-pin-stage */}
+
+        {/* ── Phase 2: 3-column layout — scrolls into view after pin releases ── */}
+        <div
+          id="hero-state2"
+          className="hidden md:flex"
+          style={{ minHeight: "100vh", alignItems: "center", background: "#F4F9FF" }}
+        >
+          {/* LEFT: text + buttons + socials */}
+          <div style={{ flex: "0 0 36%", padding: "0 32px 0 64px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", alignSelf: "flex-start", marginBottom: "20px", padding: "6px 14px", borderRadius: "999px", fontSize: "12px", fontWeight: 600, background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
+              <span style={{ position: "relative", display: "flex", height: "8px", width: "8px", flexShrink: 0 }}>
+                <span className="animate-ping" style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "var(--accent)", opacity: 0.75 }} />
+                <span style={{ display: "inline-flex", borderRadius: "50%", height: "8px", width: "8px", background: "var(--accent)" }} />
+              </span>
+              🚀 {t.hero.status}
+            </div>
+            <p style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--accent)", marginBottom: "8px" }}>{t.hero.hello}</p>
+            <h1 style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "clamp(2rem,3.2vw,3.8rem)", fontWeight: 900, color: "var(--text-main)", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "10px" }}>
+              Aleron<br /><span style={{ color: "var(--accent)" }}>Maulana F.</span>
+            </h1>
+            <p style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--muted)", marginBottom: "12px" }}>{t.hero.tagline}</p>
+            <p style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--muted)", maxWidth: "300px", marginBottom: "24px" }}>{t.hero.desc}</p>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "24px" }}>
+              <a href="/assets/CV_Aleron Maulana F_EN.pdf" download style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "10px 22px", borderRadius: "999px", fontSize: "13px", fontWeight: 600, color: "#fff", background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)", textDecoration: "none" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                {t.hero.cv}
+              </a>
+              <a href="#projects" style={{ display: "inline-flex", alignItems: "center", padding: "10px 22px", borderRadius: "999px", fontSize: "13px", fontWeight: 600, color: "var(--text-main)", border: "1.5px solid var(--border)", textDecoration: "none" }}>{t.hero.more}</a>
+            </div>
+            <div style={{ display: "flex", gap: "8px" }}>
+              {[
+                { href: "https://www.instagram.com/aleronmaulanaaa/", label: "Instagram", path: "M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm0 2h10c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3zm10 1.8a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM12 7a5 5 0 100 10 5 5 0 000-10z" },
+                { href: "https://github.com/aleronmaulanaa", label: "GitHub", path: "M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.1 11.4.6.1.8-.3.8-.7 0-.4 0-1.4 0-2.7-3.3.7-4-1.6-4-1.6-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1.1 0 1.7 1.2 1.7 1.2 1.1 1.8 2.9 1.3 3.6.9 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.6 0-1.2.4-2.3 1.1-3.1-.1-.3-.5-.9-.2-1.8 0 0 1-.3 3.3 1.2 1-.3 2.1-.5 3.2-.5 1.1 0 2.2.2 3.2.5 2.3-1.5 3.3-1.2 3.3-1.2.3.9-.1 1.5-.2 1.8.7.8 1.1 1.9 1.1 3.1 0 4.3-2.8 5.3-5.5 5.6.4.4.8 1.2.8 2.3 0 1.6 0 2.9 0 3.3.1.5.3.7.8.7 4.7-1.6 8.1-6.1 8.1-11.4 0-6.6-5.4-12-12-12z" },
+                { href: "http://www.linkedin.com/in/aleron-maulana-firjatullah-037200374", label: "LinkedIn", path: "M4.98 3.5C4.98 4.88 3.86 6 2.48 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.1h.1c.5-1 1.8-2.1 3.7-2.1 4 0 4.8 2.6 4.8 5.9V23h-4v-6.3c0-1.5 0-3.5-2.2-3.5-2.2 0-2.6 1.7-2.6 3.4V23h-4V8z" },
+              ].map(({ href, label, path }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px", borderRadius: "50%", border: "1.5px solid var(--border)", background: "var(--panel)" }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style={{ color: "var(--muted)" }}><path d={path} /></svg>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* CENTER: small card (portrait + bg text) */}
+          <div style={{ flex: "0 0 28%", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 0" }}>
+            <div style={{ width: "min(360px,90%)", aspectRatio: "3/4", background: "var(--bg-body)", borderRadius: "24px", overflow: "hidden", boxShadow: "0 40px 120px rgba(46,111,181,0.20)", position: "relative", border: "1px solid var(--border)" }}>
+              <div aria-hidden="true" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none", userSelect: "none" }}>
+                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "58px", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Full-</span>
+                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "52px", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>stack</span>
+                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "40px", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Dev &amp;</span>
+                <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "30px", fontWeight: 900, color: "#C0DAF5", lineHeight: 1, letterSpacing: "-0.02em", display: "block", textAlign: "center" }}>UI/UX</span>
+              </div>
+              <Image src="/assets/images/aleron-portrait.png" alt="Aleron Maulana" width={400} height={533}
+                style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", height: "115%", width: "auto", objectFit: "contain", objectPosition: "top center", display: "block", zIndex: 2 }}
+              />
+            </div>
+          </div>
+
+          {/* RIGHT: Lanyard */}
+          <div style={{ flex: "0 0 36%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+          </div>
         </div>
 
-        {/* Script to reveal lanyard on scroll */}
-        <Script id="lanyard-reveal" strategy="afterInteractive">{`
-          (function() {
-            var panel = document.getElementById('lanyard-panel');
-            if (!panel) return;
-            var hero = document.getElementById('home');
-            if (!hero) return;
-            function onScroll() {
-              var rect = hero.getBoundingClientRect();
-              if (rect.bottom < window.innerHeight * 0.6) {
-                panel.style.opacity = '1';
-              } else {
-                panel.style.opacity = '0';
-              }
-            }
-            window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll();
-          })();
-        `}</Script>
       </section>
 
       {/* =========================================================

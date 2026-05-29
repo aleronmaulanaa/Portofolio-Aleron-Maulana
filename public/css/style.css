@@ -359,6 +359,24 @@ footer {
 .reveal.show { opacity: 1; transform: none; }
 
 /* =========================================
+   10b. HERO SCROLL ANIMATION
+   ========================================= */
+/* Pin stage is transparent — section #home provides the #F4F9FF background */
+#hero-pin-stage {
+  background-color: transparent;
+}
+
+/* State 2 content uses section background (#F4F9FF set inline) */
+
+@keyframes hero-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+.hero-scroll-hint {
+  animation: hero-bounce 2s ease-in-out infinite;
+}
+
+/* =========================================
    11. RESPONSIVE MEDIA QUERIES
    ========================================= */
 @media (max-width: 980px) {
