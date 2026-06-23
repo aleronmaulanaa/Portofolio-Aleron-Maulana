@@ -1528,7 +1528,11 @@ import {
 } from "react-icons/si";
 // Import Icon UI
 import { FiSun, FiMoon } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import PillNav from "@/components/PillNav";
+import MagicBento, { ParticleCard } from "@/components/MagicBento";
+import ExperienceSection from "./components/ExperienceSection";
+import ProjectsSection from "./components/ProjectsSection";
 
 export default function Home() {
   // --- LOGIC DARK MODE ---
@@ -1560,6 +1564,9 @@ export default function Home() {
     }
   };
 
+  // --- MOBILE MENU STATE ---
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   // --- LOGIC BAHASA (LANGUAGE) ---
   const [lang, setLang] = useState("en");
 
@@ -1575,9 +1582,6 @@ export default function Home() {
     setLang(newLang);
     localStorage.setItem("lang", newLang);
   };
-
-  // --- LOGIC FILTER PROJECT ---
-  const [activeFilter, setActiveFilter] = useState("all");
 
   // --- GSAP HERO SCROLL ANIMATION (pin-based two-phase) ---
   useEffect(() => {
@@ -1653,7 +1657,7 @@ export default function Home() {
         home: "Home",
         tools: "Tools",
         exp: "Experience",
-        proj: "Featured Project",
+        proj: "Projects",
         about: "About Me",
         ref: "Reflection",
       },
@@ -1816,41 +1820,6 @@ export default function Home() {
 
   const t = content[lang];
 
-  // --- DATA PROJECTS ---
-  const projectsData = [
-    {
-      id: 1,
-      categories: ["web", "uiux"],
-      image: "/assets/images/projects/class.png",
-      contentKey: "card1",
-    },
-    {
-      id: 2,
-      categories: ["app", "uiux"],
-      image: "/assets/images/projects/mobile.png",
-      contentKey: "card2",
-    },
-    {
-      id: 3,
-      categories: ["backend"],
-      image: "/assets/images/projects/order.png",
-      contentKey: "card3",
-    },
-    {
-      id: 4,
-      categories: ["uiux"],
-      image: "/assets/images/projects/uiux-design.png",
-      contentKey: "card4",
-    },
-  ];
-
-  const filteredProjects =
-    activeFilter === "all"
-      ? projectsData
-      : projectsData.filter((project) =>
-          project.categories.includes(activeFilter),
-        );
-
   // --- TECH STACK ICONS ---
   const techLogos = [
     {
@@ -1993,7 +1962,7 @@ export default function Home() {
 
   return (
     <main className="relative overflow-hidden bg-[var(--bg-body)] text-[var(--text-main)] transition-colors duration-300">
-      {/* === NAVBAR === */}
+      {/* === NAVBAR — Desktop: PillNav | Mobile: StaggeredMenu === */}
       <nav
         className="!fixed top-0 left-0 w-full z-50 transition-colors duration-300"
         style={{
@@ -2007,68 +1976,170 @@ export default function Home() {
           {/* Brand */}
           <a
             href="#home"
-            className="text-xl font-bold tracking-tight"
+            className="text-xl font-bold tracking-tight z-10"
             style={{ fontFamily: "var(--font-playfair, 'Playfair Display', serif)", color: "var(--text-main)" }}
           >
             Aleron<span style={{ color: "var(--accent)" }}>Maulana</span>
           </a>
 
-          <div className="burger" id="burger" aria-label="Toggle menu" role="button" tabIndex={0}>
-            <span></span><span></span><span></span>
+          {/* Desktop: PillNav */}
+          <div className="hidden md:flex items-center gap-3">
+            <PillNav
+              logo=""
+              hideLogo
+              items={[
+                { label: t.nav.home, href: "#home" },
+                { label: t.nav.tools, href: "#tools" },
+                { label: t.nav.exp, href: "#snippets" },
+                { label: t.nav.proj, href: "#projects" },
+                { label: t.nav.about, href: "#about" },
+                { label: t.nav.ref, href: "#testimonials" },
+              ]}
+              baseColor="var(--accent-tint)"
+              pillColor="var(--panel)"
+              pillTextColor="var(--text-main)"
+              hoveredPillTextColor="var(--accent)"
+              className="!static !top-0"
+              initialLoadAnimation={false}
+            />
           </div>
 
-          <div className="menu flex items-center gap-5" id="menu">
-            {[
-              { href: "#home", label: t.nav.home },
-              { href: "#tools", label: t.nav.tools },
-              { href: "#snippets", label: t.nav.exp },
-              { href: "#projects", label: t.nav.proj },
-              { href: "#about", label: t.nav.about },
-              { href: "#testimonials", label: t.nav.ref },
-            ].map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                className="text-sm font-medium transition-colors duration-200"
-                style={{ color: "var(--muted)" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
-                onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-              >
-                {label}
-              </a>
-            ))}
+          {/* Controls: Theme + Language */}
+          <div className="flex items-center gap-2 z-10">
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-center w-9 h-9 rounded-full transition-all hover:scale-110 focus:outline-none"
+              style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
+              aria-label="Toggle Dark Mode"
+            >
+              {theme === "dark" ? <FiSun size={17} /> : <FiMoon size={17} />}
+            </button>
 
-            <div className="flex items-center gap-2 ml-2">
-              <button
-                onClick={toggleTheme}
-                className="flex items-center justify-center w-9 h-9 rounded-full transition-all hover:scale-110 focus:outline-none"
-                style={{ background: "var(--accent-tint)", color: "var(--accent)" }}
-                aria-label="Toggle Dark Mode"
-              >
-                {theme === "dark" ? <FiSun size={17} /> : <FiMoon size={17} />}
-              </button>
+            <button
+              onClick={toggleLang}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all hover:scale-105 focus:outline-none"
+              style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}
+              aria-label="Toggle Language"
+            >
+              <Image
+                src={lang === "en" ? "/assets/icons/ic_flag-us.svg" : "/assets/icons/ic_flag-indonesia.svg"}
+                alt={lang === "en" ? "US Flag" : "Indonesia Flag"}
+                width={20}
+                height={14}
+                className="rounded-sm shadow-sm"
+                priority
+              />
+              <span>{lang === "en" ? "EN" : "ID"}</span>
+            </button>
 
-              <button
-                onClick={toggleLang}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all hover:scale-105 focus:outline-none"
-                style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}
-                aria-label="Toggle Language"
-              >
-                <div className="relative w-5 h-3.5 overflow-hidden rounded-sm shadow-sm flex-shrink-0">
-                  <Image
-                    src={lang === "en" ? "/assets/icons/ic_flag-us.svg" : "/assets/icons/ic_flag-indonesia.svg"}
-                    alt={lang === "en" ? "UK Flag" : "Indonesia Flag"}
-                    layout="fill"
-                    objectFit="cover"
-                    priority
-                  />
-                </div>
-                <span>{lang === "en" ? "EN" : "ID"}</span>
-              </button>
-            </div>
+            {/* Mobile: Hamburger for StaggeredMenu */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden flex flex-col items-center justify-center w-9 h-9 rounded-full gap-[5px] transition-all"
+              style={{ background: "var(--accent-tint)" }}
+              aria-label="Toggle mobile menu"
+            >
+              <span
+                className="block w-4 h-[2px] rounded-full transition-all duration-300 origin-center"
+                style={{
+                  background: "var(--accent)",
+                  transform: mobileMenuOpen ? "translateY(7px) rotate(45deg)" : "none",
+                }}
+              />
+              <span
+                className="block w-4 h-[2px] rounded-full transition-all duration-300"
+                style={{
+                  background: "var(--accent)",
+                  opacity: mobileMenuOpen ? 0 : 1,
+                }}
+              />
+              <span
+                className="block w-4 h-[2px] rounded-full transition-all duration-300 origin-center"
+                style={{
+                  background: "var(--accent)",
+                  transform: mobileMenuOpen ? "translateY(-7px) rotate(-45deg)" : "none",
+                }}
+              />
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay — StaggeredMenu style */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            className="fixed inset-0 z-40 flex flex-col md:hidden"
+            style={{
+              background: "var(--panel)",
+              paddingTop: "80px",
+            }}
+          >
+            <div className="flex-1 flex flex-col justify-center px-8 gap-2">
+              {[
+                { href: "#home", label: t.nav.home },
+                { href: "#tools", label: t.nav.tools },
+                { href: "#snippets", label: t.nav.exp },
+                { href: "#projects", label: t.nav.proj },
+                { href: "#about", label: t.nav.about },
+                { href: "#testimonials", label: t.nav.ref },
+              ].map(({ href, label }, index) => (
+                <motion.a
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  initial={{ opacity: 0, y: 30, rotate: 5 }}
+                  animate={{ opacity: 1, y: 0, rotate: 0 }}
+                  transition={{
+                    delay: index * 0.08,
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="text-4xl font-bold uppercase tracking-tight py-2 transition-colors"
+                  style={{
+                    color: "var(--text-main)",
+                    fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "var(--text-main)")}
+                >
+                  <span className="text-sm font-normal mr-3" style={{ color: "var(--accent)" }}>
+                    0{index + 1}
+                  </span>
+                  {label}
+                </motion.a>
+              ))}
+            </div>
+
+            {/* Mobile lang toggle */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="px-8 pb-8"
+            >
+              <button
+                onClick={() => { toggleLang(); setMobileMenuOpen(false); }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold"
+                style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}
+              >
+                <Image
+                  src={lang === "en" ? "/assets/icons/ic_flag-us.svg" : "/assets/icons/ic_flag-indonesia.svg"}
+                  alt={lang === "en" ? "US Flag" : "Indonesia Flag"}
+                  width={20}
+                  height={14}
+                  className="rounded-sm"
+                />
+                <span>{lang === "en" ? "Switch to ID" : "Ganti ke EN"}</span>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* =========================================================
           1. SECTION: HERO
@@ -2317,53 +2388,67 @@ export default function Home() {
             />
           </div>
 
-          {/* Bento Grid — 4-col on desktop */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-12">
-
+          {/* Bento Grid — MagicBento with spotlight + particle effects */}
+          <MagicBento
+            glowColor="46, 111, 181"
+            enableSpotlight
+            enableBorderGlow
+            spotlightRadius={400}
+            gridClassName="grid grid-cols-1 md:grid-cols-4 gap-4 mt-12"
+          >
             {[
               {
-                span: "md:col-span-2", delay: "0s",
+                span: "md:col-span-2",
                 icon: <SiFigma style={{ color: "#F24E1E", fontSize: 20 }} />,
                 title: "UI/UX Design", sub: "Design & Prototyping",
                 tags: ["Figma", "Wireframing", "Interactive Prototyping", "User Persona", "Design System", "Auto Layout", "Component & Variant Systems"],
               },
               {
-                span: "md:col-span-1", delay: "0.07s",
+                span: "md:col-span-1",
                 icon: <SiFlutter style={{ color: "#02569B", fontSize: 20 }} />,
                 title: "Mobile Dev", sub: "Cross-platform Apps",
                 tags: ["Flutter", "Dart"],
               },
               {
-                span: "md:col-span-1", delay: "0.14s",
+                span: "md:col-span-1",
                 icon: <SiReact style={{ color: "#61DAFB", fontSize: 20 }} />,
                 title: "Frontend Dev", sub: "Interfaces & Web",
                 tags: ["HTML", "CSS", "JavaScript", "React", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap", "NativeScript", "Responsive Design"],
               },
               {
-                span: "md:col-span-1", delay: "0.21s",
+                span: "md:col-span-1",
                 icon: <SiNodedotjs style={{ color: "#339933", fontSize: 20 }} />,
                 title: "Backend Dev", sub: "APIs & Server-side",
                 tags: ["Laravel", "PHP", "Node.js", "Go (Golang)", "WordPress", "API Integration", "CMS"],
               },
               {
-                span: "md:col-span-1", delay: "0.28s",
+                span: "md:col-span-1",
                 icon: <SiPostgresql style={{ color: "#4169E1", fontSize: 20 }} />,
                 title: "Database", sub: "Data Storage",
                 tags: ["PostgreSQL", "MySQL", "MongoDB", "SQLite", "Supabase", "Firebase"],
               },
               {
-                span: "md:col-span-2", delay: "0.35s",
+                span: "md:col-span-2",
                 icon: <SiDocker style={{ color: "#2496ED", fontSize: 20 }} />,
                 title: "DevOps & Tools", sub: "Deployment & Workflow",
                 tags: ["Git", "GitHub", "Docker (Multi-Container)", "Vercel", "Postman", "Figma", "Canva", "Kaggle"],
               },
-            ].map(({ span, delay, icon, title, sub, tags }) => (
-              <div
+            ].map(({ span, icon, title, sub, tags }) => (
+              <ParticleCard
                 key={title}
-                className={`${span} rounded-2xl p-6 bento-card`}
-                style={{ background: "var(--panel)", border: "1px solid var(--border)", boxShadow: "0 4px 20px rgba(46,111,181,0.10), 0 1px 4px rgba(0,0,0,0.06)", animationDelay: delay }}
+                className={`${span} card card--border-glow rounded-2xl p-6 transition-all duration-300 hover:-translate-y-0.5`}
+                style={{
+                  background: "var(--panel)",
+                  border: "1px solid var(--border)",
+                  boxShadow: "0 4px 20px rgba(46,111,181,0.10), 0 1px 4px rgba(0,0,0,0.06)",
+                }}
+                glowColor="46, 111, 181"
+                particleCount={8}
+                enableTilt
+                enableMagnetism
+                clickEffect
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4 relative z-10">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "var(--accent-tint)" }}>
                     {icon}
                   </div>
@@ -2372,21 +2457,30 @@ export default function Home() {
                     <p className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{sub}</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 relative z-10">
                   {tags.map(tag => (
                     <span key={tag} className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--accent-soft)" }}>{tag}</span>
                   ))}
                 </div>
-              </div>
+              </ParticleCard>
             ))}
 
             {/* CARD 7 — AI-Assisted Dev (full width, animated gradient border) */}
-            <div
-              className="md:col-span-4 rounded-[18px] p-[2px] bento-card"
-              style={{ background: "linear-gradient(135deg, #2E6FB5, #C0DAF5, #5B9BD5, #2E6FB5)", backgroundSize: "300% 300%", animation: "movingBorderBg 4s ease infinite", animationDelay: "0.42s" }}
+            <ParticleCard
+              className="md:col-span-4 card card--border-glow rounded-[18px] p-[2px] transition-all duration-300 hover:-translate-y-0.5"
+              style={{
+                background: "linear-gradient(135deg, #2E6FB5, #C0DAF5, #5B9BD5, #2E6FB5)",
+                backgroundSize: "300% 300%",
+                animation: "movingBorderBg 4s ease infinite",
+              }}
+              glowColor="46, 111, 181"
+              particleCount={12}
+              enableTilt
+              enableMagnetism
+              clickEffect
             >
               <div className="rounded-[16px] p-6" style={{ background: "var(--panel)" }}>
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex items-center gap-3 mb-4 relative z-10">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, #2E6FB5, #5B9BD5)" }}>
                     <span className="text-white text-base select-none">✨</span>
                   </div>
@@ -2396,210 +2490,34 @@ export default function Home() {
                     <p className="text-xs w-full -mt-1" style={{ color: "var(--muted)" }}>Modern AI-powered workflows</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 relative z-10">
                   {["Vibe Coding", "Prompt Engineering for Developers", "Claude", "Cursor", "Gemini", "AI-Powered Tools"].map(tag => (
                     <span key={tag} className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--accent)", color: "#fff" }}>{tag}</span>
                   ))}
                 </div>
               </div>
-            </div>
+            </ParticleCard>
 
-          </div>
+          </MagicBento>
         </div>
       </section>
 
       {/* =========================================================
-          3. SECTION: EXPERIENCE (Tadinya urutan 3, tetap)
+          3. SECTION: EXPERIENCE
           ========================================================= */}
-      <section
-        id="snippets"
-        className="relative flex flex-col md:flex-row items-center justify-between min-h-screen bg-[var(--section-bg)] text-[var(--text-main)] px-8 md:px-32 py-10 md:py-12 overflow-hidden reveal transition-colors duration-300"
-      >
-        <div className="md:w-1/2 space-y-4 text-center md:text-left z-10 flex flex-col justify-center h-full pl-0 md:pl-38 reveal">
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-            {t.exp.title}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 text-lg">
-            {t.exp.desc}
-          </p>
-        </div>
-        <div className="md:w-1/2 relative flex justify-center items-center reveal mt-10 md:mt-0">
-          <div className="translate-x-0 md:translate-x-50 md:translate-y-50">
-            <CardSwap
-              width={520}
-              height={340}
-              cardDistance={70}
-              verticalDistance={80}
-              delay={4000}
-              pauseOnHover={true}
-              skewAmount={4}
-            >
-              <Card customClass="flex flex-col justify-between bg-white dark:bg-gradient-to-br dark:from-black dark:to-[#161321] border border-gray-200 dark:border-gray-700 text-black dark:text-white shadow-2xl overflow-hidden rounded-2xl transition-colors">
-                <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1b1728]">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{t.exp.card1.icon}</span>
-                    <span className="text-base font-medium">
-                      {t.exp.card1.title}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-400">2026</span>
-                </div>
-                <div className="flex flex-col justify-center items-center flex-grow bg-gray-100 dark:bg-black p-6 text-center">
-                  <h3 className="text-2xl font-bold mb-2">
-                    {t.exp.card1.role}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    Flutter, UI/UX, & Real-time Database Integration.
-                  </p>
-                </div>
-              </Card>
-              <Card customClass="flex flex-col justify-between bg-white dark:bg-gradient-to-br dark:from-black dark:to-[#161321] border border-gray-200 dark:border-gray-700 text-black dark:text-white shadow-2xl overflow-hidden rounded-2xl transition-colors">
-                <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1b1728]">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{t.exp.card2.icon}</span>
-                    <span className="text-base font-medium">
-                      {t.exp.card2.title}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-400">2024-2025</span>
-                </div>
-                <div className="flex flex-col justify-center items-center flex-grow bg-gray-100 dark:bg-black p-6 text-center">
-                  <h3 className="text-2xl font-bold mb-2">
-                    {t.exp.card2.role}
-                  </h3>
-                  <Image
-                    src="/assets/images/experience/WP.jpg"
-                    alt="Experience 2"
-                    width={400}
-                    height={180}
-                    className="object-cover w-full h-32 rounded-lg mt-2"
-                  />
-                </div>
-              </Card>
-              <Card customClass="flex flex-col justify-between bg-white dark:bg-gradient-to-br dark:from-black dark:to-[#161321] border border-gray-200 dark:border-gray-700 text-black dark:text-white shadow-2xl overflow-hidden rounded-2xl transition-colors">
-                <div className="flex items-center justify-between px-6 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#1b1728]">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{t.exp.card3.icon}</span>
-                    <span className="text-base font-medium">
-                      {t.exp.card3.title}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-400">2025</span>
-                </div>
-                <div className="flex flex-col justify-center items-center flex-grow bg-gray-100 dark:bg-black p-6 text-center">
-                  <h3 className="text-2xl font-bold mb-2">
-                    {t.exp.card3.role}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    Logistics & Event Management.
-                  </p>
-                </div>
-              </Card>
-            </CardSwap>
-          </div>
-        </div>
-      </section>
+      <ExperienceSection lang={lang} />
 
       {/* =========================================================
-          4. SECTION: FEATURED PROJECT 
+          4. SECTION: FEATURED PROJECT
           ========================================================= */}
-      <section
-        id="projects"
-        className="reveal py-20 bg-[var(--bg-body)] text-[var(--text-main)] transition-colors"
-      >
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-4">{t.proj.title}</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
-            {t.proj.desc}
-          </p>
-
-          {/* Filter Buttons */}
-          <div
-            className="filters reveal flex gap-4 mb-8 flex-wrap"
-            id="filters"
-          >
-            {["all", "uiux", "web", "app", "backend"].map((filterKey) => (
-              <button
-                key={filterKey}
-                onClick={() => setActiveFilter(filterKey)}
-                className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
-                  activeFilter === filterKey
-                    ? "bg-[var(--accent)] text-white shadow-lg scale-105"
-                    : "border border-gray-300 dark:border-gray-700 text-[var(--text-main)] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`}
-              >
-                {t.proj.filters[filterKey as keyof typeof t.proj.filters]}
-              </button>
-            ))}
-          </div>
-
-          {/* Project Grid (Dynamic Rendering) */}
-          <div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            id="projectGrid"
-          >
-            {filteredProjects.map((project) => (
-              <article
-                key={project.id}
-                className="rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#161321] hover:shadow-xl transition-all hover:-translate-y-2 duration-300"
-              >
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={project.image}
-                    alt={
-                      t.proj[project.contentKey as keyof typeof t.proj].title
-                    }
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="text-xs font-bold text-[var(--accent)] mb-2 uppercase">
-                    {t.proj[project.contentKey as keyof typeof t.proj].cat}
-                  </div>
-                  <h4 className="text-xl font-bold text-[var(--text-main)]">
-                    {t.proj[project.contentKey as keyof typeof t.proj].title}
-                  </h4>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className="mt-16 p-8 rounded-2xl bg-gray-100 dark:bg-[#161321] border border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-              <h3 className="text-2xl font-bold text-[var(--text-main)]">
-                {t.proj.cta.title}
-              </h3>
-              <div className="text-gray-500 dark:text-gray-400">
-                {t.proj.cta.avail}
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <a
-                href="https://github.com/aleronmaulanaa"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-3 rounded-full border border-current text-[var(--text-main)] hover:bg-gray-200 dark:hover:bg-gray-800 transition"
-              >
-                <span>{t.proj.cta.more}</span>
-              </a>
-              <a
-                href="mailto:aleronmaulanafirjatullah@gmail.com"
-                className="px-6 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition font-medium"
-              >
-                📧 {t.proj.cta.email}
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ProjectsSection lang={lang} />
 
       {/* =========================================================
           5. SECTION: ABOUT (Tadinya urutan 2, dipindah jadi urutan 5)
           ========================================================= */}
       <section
         id="about"
-        className="relative flex flex-col md:flex-row items-center justify-between bg-[var(--section-bg)] text-[var(--text-main)] px-8 md:px-24 py-16 md:py-20 overflow-hidden reveal"
+        className="relative flex flex-col md:flex-row items-center justify-between bg-[var(--section-bg)] text-[var(--text-main)] px-8 md:px-24 py-16 md:py-20 overflow-hidden"
       >
         <div className="md:w-1/2 flex justify-center items-center mb-8 md:mb-0 md:translate-x-6">
           <div className="w-full aspect-video max-w-xl rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
@@ -2629,7 +2547,7 @@ export default function Home() {
           ========================================================= */}
       <section
         id="testimonials"
-        className="reveal py-20 bg-[var(--bg-body)] text-[var(--text-main)] transition-colors"
+        className="py-20 bg-[var(--bg-body)] text-[var(--text-main)] transition-colors"
       >
         <div className="container mx-auto px-4 text-center md:text-left">
           <h2 className="text-4xl font-bold mb-6">{t.ref.title}</h2>
