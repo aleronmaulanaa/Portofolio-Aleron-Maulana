@@ -44,11 +44,9 @@ const StarBorder = <T extends React.ElementType = 'button'>({
         }}
       ></div>
       <div
-        className="relative z-1 border text-center text-[16px] py-[16px] px-[26px] rounded-[20px]"
+        className="relative z-1 rounded-[inherit]"
         style={{
           background: 'var(--panel)',
-          borderColor: 'var(--border)',
-          color: 'var(--text-main)',
         }}
       >
         {children}

@@ -1531,6 +1531,9 @@ import { FiSun, FiMoon } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import PillNav from "@/components/PillNav";
 import MagicBento, { ParticleCard } from "@/components/MagicBento";
+import { StaggeredMenu } from "@/components/StaggeredMenu";
+import StarBorder from "@/components/StarBorder";
+// import GradualBlur from "@/components/GradualBlur";
 import ExperienceSection from "./components/ExperienceSection";
 import ProjectsSection from "./components/ProjectsSection";
 
@@ -1564,8 +1567,9 @@ export default function Home() {
     }
   };
 
-  // --- MOBILE MENU STATE ---
+  // --- MOBILE MENU ---
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   // --- LOGIC BAHASA (LANGUAGE) ---
   const [lang, setLang] = useState("en");
@@ -1983,7 +1987,7 @@ export default function Home() {
           </a>
 
           {/* Desktop: PillNav */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden min-[1061px]:flex items-center gap-3">
             <PillNav
               logo=""
               hideLogo
@@ -2004,7 +2008,7 @@ export default function Home() {
             />
           </div>
 
-          {/* Controls: Theme + Language */}
+          {/* Controls: Theme + Language + Mobile Hamburger */}
           <div className="flex items-center gap-2 z-10">
             <button
               onClick={toggleTheme}
@@ -2017,7 +2021,7 @@ export default function Home() {
 
             <button
               onClick={toggleLang}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all hover:scale-105 focus:outline-none"
+              className="hidden min-[1061px]:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all hover:scale-105 focus:outline-none"
               style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}
               aria-label="Toggle Language"
             >
@@ -2032,114 +2036,68 @@ export default function Home() {
               <span>{lang === "en" ? "EN" : "ID"}</span>
             </button>
 
-            {/* Mobile: Hamburger for StaggeredMenu */}
+            {/* Mobile hamburger */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden flex flex-col items-center justify-center w-9 h-9 rounded-full gap-[5px] transition-all"
+              ref={hamburgerRef}
+              onClick={() => setMobileMenuOpen(prev => !prev)}
+              className="flex min-[1061px]:hidden flex-col justify-center items-center gap-[5px] w-9 h-9 rounded-full transition-all hover:scale-110 focus:outline-none"
               style={{ background: "var(--accent-tint)" }}
-              aria-label="Toggle mobile menu"
+              aria-label="Toggle Menu"
+              aria-expanded={mobileMenuOpen}
             >
-              <span
-                className="block w-4 h-[2px] rounded-full transition-all duration-300 origin-center"
-                style={{
-                  background: "var(--accent)",
-                  transform: mobileMenuOpen ? "translateY(7px) rotate(45deg)" : "none",
-                }}
-              />
-              <span
-                className="block w-4 h-[2px] rounded-full transition-all duration-300"
-                style={{
-                  background: "var(--accent)",
-                  opacity: mobileMenuOpen ? 0 : 1,
-                }}
-              />
-              <span
-                className="block w-4 h-[2px] rounded-full transition-all duration-300 origin-center"
-                style={{
-                  background: "var(--accent)",
-                  transform: mobileMenuOpen ? "translateY(-7px) rotate(-45deg)" : "none",
-                }}
-              />
+              <span className="block w-[18px] h-[2px] rounded-full transition-all duration-300" style={{ background: "var(--accent)", transform: mobileMenuOpen ? "translateY(7px) rotate(45deg)" : "none" }} />
+              <span className="block w-[18px] h-[2px] rounded-full transition-all duration-300" style={{ background: "var(--accent)", opacity: mobileMenuOpen ? 0 : 1 }} />
+              <span className="block w-[18px] h-[2px] rounded-full transition-all duration-300" style={{ background: "var(--accent)", transform: mobileMenuOpen ? "translateY(-7px) rotate(-45deg)" : "none" }} />
             </button>
+
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay — StaggeredMenu style */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            className="fixed inset-0 z-40 flex flex-col md:hidden"
-            style={{
-              background: "var(--panel)",
-              paddingTop: "80px",
-            }}
-          >
-            <div className="flex-1 flex flex-col justify-center px-8 gap-2">
-              {[
-                { href: "#home", label: t.nav.home },
-                { href: "#tools", label: t.nav.tools },
-                { href: "#snippets", label: t.nav.exp },
-                { href: "#projects", label: t.nav.proj },
-                { href: "#about", label: t.nav.about },
-                { href: "#testimonials", label: t.nav.ref },
-              ].map(({ href, label }, index) => (
-                <motion.a
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  initial={{ opacity: 0, y: 30, rotate: 5 }}
-                  animate={{ opacity: 1, y: 0, rotate: 0 }}
-                  transition={{
-                    delay: index * 0.08,
-                    duration: 0.5,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="text-4xl font-bold uppercase tracking-tight py-2 transition-colors"
-                  style={{
-                    color: "var(--text-main)",
-                    fontFamily: "var(--font-playfair, 'Playfair Display', serif)",
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "var(--accent)")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "var(--text-main)")}
-                >
-                  <span className="text-sm font-normal mr-3" style={{ color: "var(--accent)" }}>
-                    0{index + 1}
-                  </span>
-                  {label}
-                </motion.a>
-              ))}
-            </div>
-
-            {/* Mobile lang toggle */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="px-8 pb-8"
+      {/* Mobile: StaggeredMenu (compact half-screen) */}
+      <div className="min-[1061px]:hidden">
+        <StaggeredMenu
+          isFixed={false}
+          hideHeader
+          compact
+          compactTop={64}
+          controlledOpen={mobileMenuOpen}
+          closeOnNavigate
+          closeOnClickAway
+          externalTriggerRef={hamburgerRef}
+          onMenuClose={() => setMobileMenuOpen(false)}
+          position="right"
+          accentColor="var(--accent)"
+          colors={["#2E6FB5", "#5B9BD5", "#C0DAF5"]}
+          displayItemNumbering
+          displaySocials={false}
+          items={[
+            { label: t.nav.home, ariaLabel: "Home", link: "#home" },
+            { label: t.nav.tools, ariaLabel: "Tools", link: "#tools" },
+            { label: t.nav.exp, ariaLabel: "Experience", link: "#snippets" },
+            { label: t.nav.proj, ariaLabel: "Projects", link: "#projects" },
+            { label: t.nav.about, ariaLabel: "About Me", link: "#about" },
+            { label: t.nav.ref, ariaLabel: "Reflection", link: "#testimonials" },
+          ]}
+          footerContent={
+            <button
+              onClick={toggleLang}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all hover:scale-105 focus:outline-none w-full"
+              style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}
+              aria-label="Toggle Language"
             >
-              <button
-                onClick={() => { toggleLang(); setMobileMenuOpen(false); }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold"
-                style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}
-              >
-                <Image
-                  src={lang === "en" ? "/assets/icons/ic_flag-us.svg" : "/assets/icons/ic_flag-indonesia.svg"}
-                  alt={lang === "en" ? "US Flag" : "Indonesia Flag"}
-                  width={20}
-                  height={14}
-                  className="rounded-sm"
-                />
-                <span>{lang === "en" ? "Switch to ID" : "Ganti ke EN"}</span>
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <Image
+                src={lang === "en" ? "/assets/icons/ic_flag-us.svg" : "/assets/icons/ic_flag-indonesia.svg"}
+                alt={lang === "en" ? "US Flag" : "Indonesia Flag"}
+                width={20}
+                height={14}
+                className="rounded-sm shadow-sm"
+              />
+              <span>{lang === "en" ? "English" : "Indonesia"}</span>
+            </button>
+          }
+        />
+      </div>
 
       {/* =========================================================
           1. SECTION: HERO
@@ -2217,10 +2175,12 @@ export default function Home() {
             <p className="text-sm font-medium mb-3" style={{ color: "var(--muted)" }}>{t.hero.tagline}</p>
             <p className="text-xs leading-relaxed mb-5" style={{ color: "var(--muted)", maxWidth: "280px" }}>{t.hero.desc}</p>
             <div className="flex gap-2 flex-wrap mb-5">
-              <a href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                {t.hero.cv}
-              </a>
+              <StarBorder as="a" color="var(--accent)" speed="4s" thickness={2} className="!rounded-full" href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download>
+                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)" }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  {t.hero.cv}
+                </span>
+              </StarBorder>
               <a href="#projects" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold" style={{ border: "1.5px solid var(--border)", color: "var(--text-main)" }}>{t.hero.more}</a>
             </div>
             <div className="flex gap-2">
@@ -2318,10 +2278,12 @@ export default function Home() {
             <p style={{ fontSize: "0.9rem", fontWeight: 500, color: "var(--muted)", marginBottom: "12px" }}>{t.hero.tagline}</p>
             <p style={{ fontSize: "0.82rem", lineHeight: 1.65, color: "var(--muted)", maxWidth: "300px", marginBottom: "24px" }}>{t.hero.desc}</p>
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "24px" }}>
-              <a href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "10px 22px", borderRadius: "999px", fontSize: "13px", fontWeight: 600, color: "#fff", background: "var(--accent)", boxShadow: "0 4px 16px rgba(46,111,181,0.3)", textDecoration: "none" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                {t.hero.cv}
-              </a>
+              <StarBorder as="a" color="var(--accent)" speed="4s" thickness={2} className="!rounded-full" href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "10px 22px", borderRadius: "999px", fontSize: "13px", fontWeight: 600, color: "#fff", background: "var(--accent)", textDecoration: "none" }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  {t.hero.cv}
+                </span>
+              </StarBorder>
               <a href="#projects" style={{ display: "inline-flex", alignItems: "center", padding: "10px 22px", borderRadius: "999px", fontSize: "13px", fontWeight: 600, color: "var(--text-main)", border: "1.5px solid var(--border)", textDecoration: "none" }}>{t.hero.more}</a>
             </div>
             <div style={{ display: "flex", gap: "8px" }}>
@@ -2365,26 +2327,14 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Logo Marquee */}
-          <div
-            style={{
-              height: "130px",
-              position: "relative",
-              overflow: "hidden",
-              maskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
-              WebkitMaskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
-            }}
-          >
-            <LogoLoop
-              logos={techLogos}
-              speed={100}
-              direction="left"
-              logoHeight={50}
-              gap={60}
-              pauseOnHover={true}
-              scaleOnHover={true}
-              fadeOut={false}
-              ariaLabel="Technology Skills"
+          {/* GitHub Activity Game */}
+          <div className="flex justify-center mb-12">
+            <img
+              src="https://raw.githubusercontent.com/aleronmaulanaa/aleronmaulanaa/main/game.gif"
+              alt="GitHub Activity Game"
+              className="w-full max-w-4xl rounded-2xl shadow-lg"
+              style={{ border: "1px solid var(--border)" }}
+              loading="lazy"
             />
           </div>
 
@@ -2499,6 +2449,30 @@ export default function Home() {
             </ParticleCard>
 
           </MagicBento>
+
+          {/* Logo Marquee */}
+          <div
+            className="mt-12"
+            style={{
+              height: "130px",
+              position: "relative",
+              overflow: "hidden",
+              maskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+            }}
+          >
+            <LogoLoop
+              logos={techLogos}
+              speed={100}
+              direction="left"
+              logoHeight={50}
+              gap={60}
+              pauseOnHover={true}
+              scaleOnHover={true}
+              fadeOut={false}
+              ariaLabel="Technology Skills"
+            />
+          </div>
         </div>
       </section>
 
@@ -2590,30 +2564,16 @@ export default function Home() {
             </a>
           </nav>
 
-          <a
-            href="/assets/Portofolio_Aleron Maulana Firjatullah.pdf"
-            download
-            className="flex items-center gap-2 text-sm font-bold text-[var(--accent)] hover:brightness-110 transition-all mb-2"
-            aria-label="Download Portfolio PDF"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            {lang === "en"
-              ? "Download Portfolio Deck (PDF)"
-              : "Unduh Dokumen Portofolio (PDF)"}
-          </a>
+          <StarBorder as="a" color="var(--accent)" speed="5s" thickness={2} className="!rounded-full mb-2" href="/assets/Portofolio_Aleron Maulana Firjatullah.pdf" download aria-label="Download Portfolio PDF">
+            <span className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-[var(--accent)]">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              {lang === "en" ? "Download Portfolio Deck (PDF)" : "Unduh Dokumen Portofolio (PDF)"}
+            </span>
+          </StarBorder>
           <div className="flex gap-6">
             <a
               className="hover:scale-110 transition"

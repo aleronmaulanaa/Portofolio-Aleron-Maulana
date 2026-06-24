@@ -18,6 +18,13 @@ interface Spark {
   startTime: number;
 }
 
+const resolveCssColor = (color: string): string => {
+  if (typeof window === 'undefined') return color;
+  if (!color.startsWith('var(')) return color;
+  const varName = color.replace(/^var\(/, '').replace(/\)$/, '').split(',')[0].trim();
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim() || color;
+};
+
 const ClickSpark: React.FC<ClickSparkProps> = ({
   sparkColor = '#fff',
   sparkSize = 10,
@@ -112,7 +119,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
         const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
         const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
 
-        ctx.strokeStyle = sparkColor;
+        ctx.strokeStyle = resolveCssColor(sparkColor);
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x1, y1);

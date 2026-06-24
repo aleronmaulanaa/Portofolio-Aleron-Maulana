@@ -10,7 +10,7 @@ import ShinyText from "@/components/ShinyText";
 import CountUp from "@/components/CountUp";
 import RotatingText from "@/components/RotatingText";
 import ClickSpark from "@/components/ClickSpark";
-import GradualBlur from "@/components/GradualBlur";
+// import GradualBlur from "@/components/GradualBlur";
 
 function ImageWithFallback({
   src,
@@ -277,15 +277,6 @@ export default function ExperienceSection({ lang }: Props) {
         className="py-24 transition-colors duration-300 relative"
         style={{ background: "var(--section-bg)" }}
       >
-        <GradualBlur
-          position="top"
-          strength={2}
-          height="5rem"
-          divCount={6}
-          curve="ease-out"
-          animated="scroll"
-          duration="0.6s"
-        />
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-16">
