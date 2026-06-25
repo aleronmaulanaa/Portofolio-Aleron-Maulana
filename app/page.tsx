@@ -1533,6 +1533,7 @@ import PillNav from "@/components/PillNav";
 import MagicBento, { ParticleCard } from "@/components/MagicBento";
 import { StaggeredMenu } from "@/components/StaggeredMenu";
 import StarBorder from "@/components/StarBorder";
+import ClickSpark from "@/components/ClickSpark";
 // import GradualBlur from "@/components/GradualBlur";
 import ExperienceSection from "./components/ExperienceSection";
 import ProjectsSection from "./components/ProjectsSection";
@@ -2104,6 +2105,7 @@ export default function Home() {
           Phase 1 — card shrinks while pinned (GSAP pin: true)
           Phase 2 — 3-column layout scrolls in after pin releases
           ========================================================= */}
+      <ClickSpark sparkColor="var(--accent)" sparkSize={10} sparkRadius={18} duration={450}>
       <section id="home" style={{ background: "#F4F9FF", padding: 0, position: "relative", overflow: "hidden" }}>
         {/* ── Phase 1: Pinned stage ── */}
         <div
@@ -2114,6 +2116,7 @@ export default function Home() {
           {/* === HERO CARD: bg text + portrait (scales as one unit via GSAP) === */}
           <div
             id="hero-card"
+            className="hidden md:block"
             style={{
               position: "absolute",
               top: 0, left: 0,
@@ -2146,17 +2149,18 @@ export default function Home() {
               src="/assets/images/aleron-portrait.png"
               alt="Aleron Maulana Firjatullah"
               width={520} height={700} priority
-              style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", height: "150vh", width: "auto", objectFit: "contain", objectPosition: "top center", display: "block", zIndex: 2 }}
+              style={{ position: "absolute", top: "-8vh", left: "50%", transform: "translateX(-50%)", height: "150vh", width: "auto", objectFit: "contain", objectPosition: "top center", display: "block", zIndex: 2 }}
             />
           </div>
 
           {/* === LEFT PANEL (State 2 — slides in from left) === */}
           <div
             id="hero-left"
+            className="hidden md:flex"
             style={{
               position: "absolute", left: 0, top: 0,
               width: "36%", height: "100vh",
-              display: "flex", flexDirection: "column", justifyContent: "center",
+              flexDirection: "column", justifyContent: "center",
               padding: "0 32px 0 52px",
               zIndex: 10, opacity: 0, pointerEvents: "none",
             }}
@@ -2199,10 +2203,11 @@ export default function Home() {
           {/* === RIGHT PANEL — Lanyard (State 2) === */}
           <div
             id="hero-right"
+            className="hidden md:flex"
             style={{
               position: "absolute", right: 0, top: 0,
               width: "36%", height: "100vh",
-              display: "flex", alignItems: "center", justifyContent: "center",
+              alignItems: "center", justifyContent: "center",
               zIndex: 10, opacity: 0, pointerEvents: "none",
             }}
           >
@@ -2225,26 +2230,35 @@ export default function Home() {
           </div>
 
           {/* === MOBILE FALLBACK (< 768px) === */}
-          <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center px-6 pt-20 pb-10 gap-6">
-            <div style={{ position: "relative", width: "200px", zIndex: 5, flexShrink: 0 }}>
-              <div aria-hidden="true" style={{ position: "absolute", inset: "-20px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "10vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9 }}>Full-stack</span>
-                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "8vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9 }}>Dev &amp;</span>
-                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "6vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 1 }}>UI/UX</span>
+          <div className="md:hidden absolute inset-0 flex flex-col items-center px-5" style={{ paddingTop: "24px", paddingBottom: "130px" }}>
+            {/* Photo — starts right below navbar, shrinks on short viewports */}
+            <div style={{ position: "relative", width: "clamp(280px, 75vw, 450px)", zIndex: 5, flexShrink: 1, minHeight: 0, overflow: "hidden" }}>
+              <div aria-hidden="true" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(4rem, 12vw, 6rem)", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.85, letterSpacing: "-0.03em" }}>Full-stack</span>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(3.2rem, 9.5vw, 5rem)", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.85, letterSpacing: "-0.03em" }}>Developer &amp;</span>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(2.3rem, 6.5vw, 3.5rem)", fontWeight: 900, color: "#C0DAF5", lineHeight: 1, letterSpacing: "-0.02em" }}>UI/UX Designer</span>
               </div>
-              <Image src="/assets/images/aleron-portrait.png" alt="Aleron Maulana" width={200} height={280} style={{ width: "100%", height: "auto", position: "relative", zIndex: 2 }} />
+              <Image src="/assets/images/aleron-portrait.png" alt="Aleron Maulana" width={420} height={560} style={{ width: "100%", height: "auto", position: "relative", zIndex: 2, transform: "translateY(max(-14%, -45px))" }} />
             </div>
-            <div className="text-center z-10">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-1" style={{ color: "var(--accent)" }}>{t.hero.hello}</p>
-              <h1 style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "2.2rem", fontWeight: 900, color: "var(--text-main)", lineHeight: 1.05, marginBottom: "8px" }}>
+
+            {/* Text content — never shrinks, sits below photo */}
+            <div className="text-center z-10 w-full flex-shrink-0 mt-6">
+              <p className="text-[10px] font-semibold tracking-widest uppercase mb-0.5" style={{ color: "var(--accent)" }}>{t.hero.hello}</p>
+              <h1 style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(1.8rem, 5.5vw, 2.4rem)", fontWeight: 900, color: "var(--text-main)", lineHeight: 1.05, marginBottom: "4px" }}>
                 Aleron <span style={{ color: "var(--accent)" }}>Maulana F.</span>
               </h1>
-              <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>{t.hero.tagline}</p>
-              <div className="flex gap-2 justify-center flex-wrap mb-3">
-                <a href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)" }}>{t.hero.cv}</a>
-                <a href="#projects" className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold" style={{ border: "1.5px solid var(--border)", color: "var(--text-main)" }}>{t.hero.more}</a>
+              <p className="text-sm font-medium mb-1.5" style={{ color: "var(--muted)" }}>{t.hero.tagline}</p>
+              <p className="text-xs leading-relaxed mb-3 mx-auto" style={{ color: "var(--muted)", maxWidth: "380px" }}>{t.hero.desc}</p>
+              <div className="flex gap-2 justify-center flex-wrap mb-2">
+                <StarBorder as="a" color="var(--accent)" speed="4s" thickness={2} className="!rounded-full" href="/assets/CV_Aleron Maulana Firjatullah - Update.pdf" download>
+                  <span className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-semibold text-white" style={{ background: "var(--accent)" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    {t.hero.cv}
+                  </span>
+                </StarBorder>
+                <a href="#projects" className="inline-flex items-center px-5 py-2.5 rounded-full text-xs font-semibold" style={{ border: "1.5px solid var(--border)", color: "var(--text-main)" }}>{t.hero.more}</a>
               </div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold" style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold" style={{ background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: "var(--accent)" }} />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: "var(--accent)" }} />
@@ -2262,8 +2276,9 @@ export default function Home() {
           className="hidden md:flex"
           style={{ minHeight: "100vh", alignItems: "center", background: "#F4F9FF" }}
         >
+          <div className="container mx-auto px-4 flex items-center w-full">
           {/* LEFT: text + buttons + socials */}
-          <div id="hero-state2-left" style={{ flex: "0 0 50%", padding: "0 48px 0 80px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <div id="hero-state2-left" style={{ flex: "0 0 50%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", alignSelf: "flex-start", marginBottom: "20px", padding: "6px 14px", borderRadius: "999px", fontSize: "12px", fontWeight: 600, background: "var(--accent-tint)", color: "var(--accent)", border: "1px solid var(--border)" }}>
               <span style={{ position: "relative", display: "flex", height: "8px", width: "8px", flexShrink: 0 }}>
                 <span className="animate-ping" style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "var(--accent)", opacity: 0.75 }} />
@@ -2300,16 +2315,19 @@ export default function Home() {
           </div>
 
           {/* RIGHT: Lanyard */}
-          <div id="hero-state2-right" style={{ flex: "0 0 50%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 80px 0 48px" }}>
+          <div id="hero-state2-right" style={{ flex: "0 0 50%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
           </div>
+          </div>{/* end container */}
         </div>
 
       </section>
+      </ClickSpark>
 
       {/* =========================================================
           2. SECTION: TOOLS & SKILLS — BENTO GRID
           ========================================================= */}
+      <ClickSpark sparkColor="var(--accent)" sparkSize={10} sparkRadius={18} duration={450}>
       <section
         id="tools"
         className="py-24 text-[var(--text-main)] transition-colors"
@@ -2475,6 +2493,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </ClickSpark>
 
       {/* =========================================================
           3. SECTION: EXPERIENCE
@@ -2489,36 +2508,41 @@ export default function Home() {
       {/* =========================================================
           5. SECTION: ABOUT (Tadinya urutan 2, dipindah jadi urutan 5)
           ========================================================= */}
+      <ClickSpark sparkColor="var(--accent)" sparkSize={10} sparkRadius={18} duration={450}>
       <section
         id="about"
-        className="relative flex flex-col md:flex-row items-center justify-between bg-[var(--section-bg)] text-[var(--text-main)] px-8 md:px-24 py-16 md:py-20 overflow-hidden"
+        className="py-16 md:py-20 bg-[var(--section-bg)] text-[var(--text-main)] overflow-hidden transition-colors"
       >
-        <div className="md:w-1/2 flex justify-center items-center mb-8 md:mb-0 md:translate-x-6">
-          <div className="w-full aspect-video max-w-xl rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
-            <iframe
-              width="560"
-              height="315"
-              src="https://www.youtube.com/embed/mPxlAkeoywk?si=eeyf2DzOzo4OLbVe"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="md:w-1/2 flex justify-center items-center">
+            <div className="w-full aspect-video max-w-xl rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
+              <iframe
+                width="560"
+                height="315"
+                src="https://www.youtube.com/embed/mPxlAkeoywk?si=eeyf2DzOzo4OLbVe"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                className="w-full h-full"
+              ></iframe>
+            </div>
+          </div>
+          <div className="md:w-1/2 text-center md:text-left space-y-6">
+            <h2 className="text-4xl md:text-5xl font-bold">{t.about.title}</h2>
+            <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+              {t.about.desc}
+            </p>
           </div>
         </div>
-        <div className="md:w-1/2 text-center md:text-left space-y-6 md:-translate-x-8">
-          <h2 className="text-4xl md:text-5xl font-bold">{t.about.title}</h2>
-          <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-            {t.about.desc}
-          </p>
-        </div>
       </section>
+      </ClickSpark>
 
       {/* =========================================================
           6. SECTION: TESTIMONIALS / REFLECTION (Tetap urutan 6)
           ========================================================= */}
+      <ClickSpark sparkColor="var(--accent)" sparkSize={10} sparkRadius={18} duration={450}>
       <section
         id="testimonials"
         className="py-20 bg-[var(--bg-body)] text-[var(--text-main)] transition-colors"
@@ -2533,8 +2557,10 @@ export default function Home() {
           </p>
         </div>
       </section>
+      </ClickSpark>
 
       {/* === FOOTER === */}
+      <ClickSpark sparkColor="var(--accent)" sparkSize={10} sparkRadius={18} duration={450}>
       <footer className="py-10 bg-[var(--section-bg)] text-[var(--text-main)] border-t border-gray-200 dark:border-gray-800 transition-colors">
         <div className="container mx-auto px-4 flex flex-col items-center gap-6">
           <div className="text-2xl font-bold">AleronMaulana</div>
@@ -2624,6 +2650,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      </ClickSpark>
     </main>
   );
 }

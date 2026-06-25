@@ -409,6 +409,17 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     }
   }, [controlledOpen, playOpen, playClose, onMenuOpen, onMenuClose]);
 
+  const itemsKey = items?.map(i => i.label).join(',') || '';
+  React.useEffect(() => {
+    if (!open || !panelRef.current) return;
+    const numberEls = Array.from(
+      panelRef.current.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item')
+    ) as HTMLElement[];
+    if (numberEls.length) {
+      gsap.set(numberEls, { ['--sm-num-opacity' as any]: 1 });
+    }
+  }, [itemsKey, open]);
+
   return (
     <div
       className={`sm-scope ${compact ? 'sm-compact fixed pointer-events-none' : isFixed ? 'z-40 fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'z-40 w-full h-full'}`}
