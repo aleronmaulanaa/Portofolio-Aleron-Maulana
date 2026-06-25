@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Canvas, extend, useFrame } from "@react-three/fiber";
+import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
 import {
   useGLTF,
   useTexture,
@@ -37,29 +37,19 @@ export default function Lanyard({
   fov = 20,
   transparent = true,
 }: LanyardProps) {
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 768
-  );
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
     <div className="relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center">
       <Canvas
         camera={{ position, fov }}
-        dpr={[1, isMobile ? 1.5 : 2]}
+        dpr={[1, 2]}
         gl={{ alpha: transparent }}
         onCreated={({ gl }) =>
           gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)
         }
       >
         <ambientLight intensity={Math.PI} />
-        <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
-          <Band isMobile={isMobile} />
+        <Physics gravity={gravity} timeStep={1 / 60}>
+          <Band baseFov={fov} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -99,16 +89,17 @@ export default function Lanyard({
 interface BandProps {
   maxSpeed?: number;
   minSpeed?: number;
-  isMobile?: boolean;
+  baseFov?: number;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
+function Band({ maxSpeed = 50, minSpeed = 0, baseFov = 20 }: BandProps) {
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);
   const j1 = useRef<any>(null);
   const j2 = useRef<any>(null);
   const j3 = useRef<any>(null);
   const card = useRef<any>(null);
+  const lastFov = useRef(0);
 
   const vec = new THREE.Vector3();
   const ang = new THREE.Vector3();
@@ -138,9 +129,9 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
 
-  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
-  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
+  useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 0.75]);
+  useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 0.75]);
+  useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 0.75]);
   useSphericalJoint(j3, card, [
     [0, 0, 0],
     [0, 1.5, 0],
@@ -156,6 +147,18 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
   }, [hovered, dragged]);
 
   useFrame((state, delta) => {
+    // Responsive FOV — runs every frame, reads viewport width directly
+    const cam = state.camera as THREE.PerspectiveCamera;
+    const w = state.size.width;
+    // Canvas is inside a 50% flex container, so approximate viewport = w * 2
+    // But also check window directly for accuracy
+    const vw = typeof window !== "undefined" ? window.innerWidth : w * 2;
+    const targetFov = vw >= 768 && vw < 1100 ? baseFov + 8 : baseFov;
+    if (Math.abs(cam.fov - targetFov) > 0.01) {
+      cam.fov = targetFov;
+      cam.updateProjectionMatrix();
+    }
+
     if (dragged) {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();
@@ -168,6 +171,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
       });
     }
     if (fixed.current) {
+      const isMobile = vw < 768;
       [j1, j2].forEach((ref) => {
         if (!ref.current.lerped)
           ref.current.lerped = new THREE.Vector3().copy(
@@ -247,7 +251,7 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
               <meshPhysicalMaterial
                 map={materials.base.map}
                 map-anisotropy={16}
-                clearcoat={isMobile ? 0 : 1}
+                clearcoat={1}
                 clearcoatRoughness={0.15}
                 roughness={0.9}
                 metalness={0.8}
@@ -267,11 +271,11 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }: BandProps) {
         <meshLineMaterial
           color="white"
           depthTest={false}
-          resolution={isMobile ? [1000, 2000] : [1000, 1000]}
+          resolution={[1000, 1000]}
           useMap
           map={texture}
-          repeat={[-4, 1]}
-          lineWidth={1}
+          repeat={[-1, 1]}
+          lineWidth={1.2}
         />
       </mesh>
     </>
