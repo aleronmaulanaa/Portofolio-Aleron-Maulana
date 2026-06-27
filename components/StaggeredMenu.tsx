@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import ClickSpark from '@/components/ClickSpark';
 
 export interface StaggeredMenuItem {
   label: string;
@@ -554,6 +555,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           className="staggered-menu-panel absolute top-0 right-0 h-full bg-white flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10 pointer-events-auto"
           aria-hidden={!open}
         >
+          <ClickSpark sparkColor={accentColor || '#2E6FB5'} sparkSize={8} sparkRadius={15} duration={400} wrapperClassName="flex-1 flex flex-col">
           <div className="sm-panel-inner flex-1 flex flex-col gap-5">
             <ul
               className="sm-panel-list list-none m-0 p-0 flex flex-col gap-2"
@@ -616,6 +618,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               </div>
             )}
           </div>
+          </ClickSpark>
         </aside>
       </div>
 

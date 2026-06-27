@@ -9,6 +9,7 @@ interface ClickSparkProps {
   easing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
   extraScale?: number;
   children?: React.ReactNode;
+  wrapperClassName?: string;
 }
 
 interface Spark {
@@ -33,7 +34,8 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
   duration = 400,
   easing = 'ease-out',
   extraScale = 1.0,
-  children
+  children,
+  wrapperClassName
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sparksRef = useRef<Spark[]>([]);
@@ -158,7 +160,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
   };
 
   return (
-    <div className="relative w-full" onClick={handleClick}>
+    <div className={`relative w-full ${wrapperClassName || ''}`} onClick={handleClick}>
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-50" />
       {children}
     </div>

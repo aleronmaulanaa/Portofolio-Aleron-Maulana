@@ -1534,9 +1534,32 @@ import MagicBento, { ParticleCard } from "@/components/MagicBento";
 import { StaggeredMenu } from "@/components/StaggeredMenu";
 import StarBorder from "@/components/StarBorder";
 import ClickSpark from "@/components/ClickSpark";
-// import GradualBlur from "@/components/GradualBlur";
+import ScrollFloat from "@/components/ScrollFloat";
+import AnimatedContent from "./components/AnimatedContent/AnimatedContent";
 import ExperienceSection from "./components/ExperienceSection";
 import ProjectsSection from "./components/ProjectsSection";
+
+function ToolsHeader({ label, title }: { label: string; title: string }) {
+  const [showLabel, setShowLabel] = useState(false);
+
+  return (
+    <div className="text-center mb-10">
+      <div style={{ opacity: showLabel ? 1 : 0, transform: showLabel ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.5s ease, transform 0.5s ease' }}>
+        <p className="text-xs font-semibold tracking-[0.18em] uppercase mb-2" style={{ color: "var(--accent)" }}>
+          {label}
+        </p>
+      </div>
+      <ScrollFloat
+        containerClassName="!my-0"
+        textClassName="!text-[clamp(28px,3.2vw,44px)] !leading-[1.2] font-[800] tracking-[-0.02em]"
+        style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", color: "var(--text-main)" }}
+        onComplete={() => setShowLabel(true)}
+      >
+        {title}
+      </ScrollFloat>
+    </div>
+  );
+}
 
 export default function Home() {
   // --- LOGIC DARK MODE ---
@@ -1977,6 +2000,7 @@ export default function Home() {
           borderBottom: "1px solid var(--border)",
         }}
       >
+        <ClickSpark sparkColor="var(--accent)" sparkSize={8} sparkRadius={15} duration={400}>
         <div className="container nav-inner flex justify-between items-center" style={{ height: "64px" }}>
           {/* Brand */}
           <a
@@ -2053,6 +2077,7 @@ export default function Home() {
 
           </div>
         </div>
+        </ClickSpark>
       </nav>
 
       {/* Mobile: StaggeredMenu (compact half-screen) */}
@@ -2106,7 +2131,7 @@ export default function Home() {
           Phase 2 — 3-column layout scrolls in after pin releases
           ========================================================= */}
       <ClickSpark sparkColor="var(--accent)" sparkSize={10} sparkRadius={18} duration={450}>
-      <section id="home" style={{ background: "#F4F9FF", padding: 0, position: "relative", overflow: "hidden" }}>
+      <section id="home" style={{ background: "var(--section-bg)", padding: 0, position: "relative", overflow: "hidden" }}>
         {/* ── Phase 1: Pinned stage ── */}
         <div
           id="hero-pin-stage"
@@ -2139,9 +2164,9 @@ export default function Home() {
                 pointerEvents: "none", userSelect: "none", zIndex: 1,
               }}
             >
-              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "16vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Full-stack</span>
-              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "13vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Developer &amp;</span>
-              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "9.5vw", fontWeight: 900, color: "#C0DAF5", lineHeight: 1, letterSpacing: "-0.02em", display: "block", textAlign: "center" }}>UI/UX Designer</span>
+              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "16vw", fontWeight: 900, color: "var(--accent-soft)", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Full-stack</span>
+              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "13vw", fontWeight: 900, color: "var(--accent-soft)", lineHeight: 0.9, letterSpacing: "-0.03em", display: "block", textAlign: "center" }}>Developer &amp;</span>
+              <span style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "9.5vw", fontWeight: 900, color: "var(--accent-soft)", lineHeight: 1, letterSpacing: "-0.02em", display: "block", textAlign: "center" }}>UI/UX Designer</span>
             </div>
 
             {/* Portrait — 150vh tall so overflow:hidden clips below waist */}
@@ -2219,7 +2244,7 @@ export default function Home() {
           {/* === SCROLL HINT (fades out on scroll) === */}
           <div
             id="hero-scroll-hint"
-            style={{ position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)", zIndex: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}
+            style={{ position: "absolute", bottom: "72px", left: "50%", transform: "translateX(-50%)", zIndex: 20, display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}
           >
             <span style={{ color: "var(--muted)", fontSize: "10px", letterSpacing: "0.15em", fontWeight: 600 }}>SCROLL</span>
             <div className="hero-scroll-hint">
@@ -2234,9 +2259,9 @@ export default function Home() {
             {/* Photo — starts right below navbar, shrinks on short viewports */}
             <div style={{ position: "relative", width: "clamp(280px, 75vw, 450px)", zIndex: 5, flexShrink: 1, minHeight: 0, overflow: "hidden" }}>
               <div aria-hidden="true" style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(4rem, 12vw, 6rem)", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.85, letterSpacing: "-0.03em" }}>Full-stack</span>
-                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(3.2rem, 9.5vw, 5rem)", fontWeight: 900, color: "#C0DAF5", lineHeight: 0.85, letterSpacing: "-0.03em" }}>Developer &amp;</span>
-                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(2.3rem, 6.5vw, 3.5rem)", fontWeight: 900, color: "#C0DAF5", lineHeight: 1, letterSpacing: "-0.02em" }}>UI/UX Designer</span>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(4rem, 12vw, 6rem)", fontWeight: 900, color: "var(--accent-soft)", lineHeight: 0.85, letterSpacing: "-0.03em" }}>Full-stack</span>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(3.2rem, 9.5vw, 5rem)", fontWeight: 900, color: "var(--accent-soft)", lineHeight: 0.85, letterSpacing: "-0.03em" }}>Developer &amp;</span>
+                <span style={{ fontFamily: "var(--font-playfair,serif)", fontSize: "clamp(2.3rem, 6.5vw, 3.5rem)", fontWeight: 900, color: "var(--accent-soft)", lineHeight: 1, letterSpacing: "-0.02em" }}>UI/UX Designer</span>
               </div>
               <Image src="/assets/images/aleron-portrait.png" alt="Aleron Maulana" width={420} height={560} style={{ width: "100%", height: "auto", position: "relative", zIndex: 2, transform: "translateY(max(-14%, -45px))" }} />
             </div>
@@ -2274,7 +2299,7 @@ export default function Home() {
         <div
           id="hero-state2"
           className="hidden md:flex"
-          style={{ minHeight: "100vh", alignItems: "center", background: "#F4F9FF" }}
+          style={{ minHeight: "100vh", alignItems: "center", background: "var(--section-bg)" }}
         >
           <div className="container mx-auto px-4 flex items-center w-full">
           {/* LEFT: text + buttons + socials */}
@@ -2336,14 +2361,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
 
           {/* Header */}
-          <div className="text-center mb-10">
-            <p className="text-xs font-semibold tracking-[0.18em] uppercase mb-2" style={{ color: "var(--accent)" }}>
-              {lang === "en" ? "What I Work With" : "Yang Saya Gunakan"}
-            </p>
-            <h2 style={{ fontFamily: "var(--font-playfair,'Playfair Display',serif)", fontSize: "clamp(28px,3.2vw,44px)", fontWeight: 800, color: "var(--text-main)", letterSpacing: "-0.02em" }}>
-              {t.tools.title}
-            </h2>
-          </div>
+          <ToolsHeader label={lang === "en" ? "What I Work With" : "Yang Saya Gunakan"} title={t.tools.title} />
 
           {/* GitHub Activity Game */}
           <div className="flex justify-center mb-12">
@@ -2437,7 +2455,7 @@ export default function Home() {
             <ParticleCard
               className="md:col-span-4 card card--border-glow rounded-[18px] p-[2px] transition-all duration-300 hover:-translate-y-0.5"
               style={{
-                background: "linear-gradient(135deg, #2E6FB5, #C0DAF5, #5B9BD5, #2E6FB5)",
+                background: "linear-gradient(135deg, var(--accent), var(--accent-soft), var(--accent-2), var(--accent))",
                 backgroundSize: "300% 300%",
                 animation: "movingBorderBg 4s ease infinite",
               }}

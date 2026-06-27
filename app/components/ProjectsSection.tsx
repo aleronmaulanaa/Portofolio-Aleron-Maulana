@@ -10,7 +10,6 @@ import ShinyText from "@/components/ShinyText";
 import CountUp from "@/components/CountUp";
 import RotatingText from "@/components/RotatingText";
 import ClickSpark from "@/components/ClickSpark";
-// import GradualBlur from "@/components/GradualBlur";
 import StarBorder from "@/components/StarBorder";
 
 import {
