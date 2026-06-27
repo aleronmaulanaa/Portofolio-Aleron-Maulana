@@ -1535,6 +1535,7 @@ import { StaggeredMenu } from "@/components/StaggeredMenu";
 import StarBorder from "@/components/StarBorder";
 import ClickSpark from "@/components/ClickSpark";
 import ScrollFloat from "@/components/ScrollFloat";
+import SplitText from "@/components/SplitText";
 import AnimatedContent from "./components/AnimatedContent/AnimatedContent";
 import ExperienceSection from "./components/ExperienceSection";
 import ProjectsSection from "./components/ProjectsSection";
@@ -2548,8 +2549,18 @@ export default function Home() {
             </div>
           </div>
           <div className="md:w-1/2 text-center md:text-left space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold">{t.about.title}</h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+            <SplitText
+              text={t.about.title}
+              className="text-4xl md:text-5xl font-bold"
+              tag="h2"
+              delay={40}
+              duration={1}
+              splitType="chars"
+              from={{ opacity: 0, y: 30, rotateX: -40 }}
+              to={{ opacity: 1, y: 0, rotateX: 0 }}
+              threshold={0.2}
+            />
+            <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed text-justify">
               {t.about.desc}
             </p>
           </div>
@@ -2566,8 +2577,18 @@ export default function Home() {
         className="py-20 bg-[var(--bg-body)] text-[var(--text-main)] transition-colors"
       >
         <div className="container mx-auto px-4 text-center md:text-left">
-          <h2 className="text-4xl font-bold mb-6">{t.ref.title}</h2>
-          <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-4xl">
+          <SplitText
+            text={t.ref.title}
+            className="text-4xl font-bold mb-6"
+            tag="h2"
+            delay={40}
+            duration={1}
+            splitType="chars"
+            from={{ opacity: 0, y: 30, rotateX: -40 }}
+            to={{ opacity: 1, y: 0, rotateX: 0 }}
+            threshold={0.2}
+          />
+          <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-4xl text-justify">
             {t.ref.p1}
             <br />
             <br />
