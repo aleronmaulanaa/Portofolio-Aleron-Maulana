@@ -74,7 +74,7 @@ const content = {
     title: "Experience",
     desc: "From professional internships to campus organizations and national events — here's a timeline of my growth in tech, leadership, and design.",
     tabs: { work: "Work & Organization", events: "Events & Certificates" },
-    rotating: ["Developer", "Designer", "Leader", "Creator"],
+    rotating: ["Developer", "Designer", "Leader", "Creator", "Mentor"],
     items: [
       {
         id: "multifab",
@@ -167,7 +167,7 @@ const content = {
     title: "Pengalaman",
     desc: "Dari magang profesional hingga organisasi kampus dan acara nasional — berikut perjalanan pertumbuhan saya di bidang teknologi, kepemimpinan, dan desain.",
     tabs: { work: "Kerja & Organisasi", events: "Acara & Sertifikat" },
-    rotating: ["Developer", "Desainer", "Pemimpin", "Kreator"],
+    rotating: ["Developer", "Desainer", "Pemimpin", "Kreator", "Mentor"],
     items: [
       {
         id: "multifab",
@@ -265,6 +265,19 @@ export default function ExperienceSection({ lang }: Props) {
   const t = content[lang as keyof typeof content] || content.en;
   const [activeTab, setActiveTab] = useState<Tab>("work");
   const [selectedItem, setSelectedItem] = useState<ExperienceItem | null>(null);
+  const [titleDone, setTitleDone] = useState(false);
+  const [descDone, setDescDone] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(false);
+  const [showRotating, setShowRotating] = useState(false);
+
+  const bothDone = titleDone && descDone;
+
+  React.useEffect(() => {
+    if (!bothDone) return;
+    const t1 = setTimeout(() => setShowSubtitle(true), 100);
+    const t2 = setTimeout(() => setShowRotating(true), 400);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [bothDone]);
 
   const filtered = t.items.filter((item) => item.tab === activeTab);
   const totalExperiences = t.items.length;
@@ -279,13 +292,18 @@ export default function ExperienceSection({ lang }: Props) {
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-16">
-            <GradientText
-              colors={["#2E6FB5", "#5B9BD5", "#82B8E8", "#2E6FB5"]}
-              animationSpeed={6}
-              className="text-xs font-semibold tracking-[0.2em] uppercase mb-4"
-            >
-              {t.subtitle}
-            </GradientText>
+            <div style={{
+              opacity: showSubtitle ? 1 : 0,
+              transform: showSubtitle ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 0.5s ease, transform 0.5s ease'
+            }}>
+              <p
+                className="text-xs font-semibold tracking-[0.2em] uppercase mb-4"
+                style={{ color: "var(--accent)" }}
+              >
+                {t.subtitle}
+              </p>
+            </div>
 
             <div style={{ color: "var(--text-main)" }}>
               <SplitText
@@ -299,30 +317,37 @@ export default function ExperienceSection({ lang }: Props) {
                 to={{ opacity: 1, y: 0, rotateX: 0 }}
                 threshold={0.2}
                 textAlign="center"
+                onLetterAnimationComplete={() => setTitleDone(true)}
               />
             </div>
 
-            <div className="flex items-center justify-center gap-2 mb-5">
-              <span
-                className="text-sm font-medium"
-                style={{ color: "var(--muted)" }}
-              >
-                {lang === "en" ? "as a" : "sebagai"}
-              </span>
-              <RotatingText
-                texts={t.rotating}
-                mainClassName="text-sm font-bold overflow-hidden h-6"
-                staggerFrom="last"
-                staggerDuration={0.03}
-                rotationInterval={2500}
-                transition={{ type: "spring", damping: 20, stiffness: 250 }}
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-110%", opacity: 0 }}
-                splitBy="characters"
-                elementLevelClassName="inline-block"
-                style={{ color: "var(--accent)" }}
-              />
+            <div style={{
+              opacity: showRotating ? 1 : 0,
+              transform: showRotating ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 0.5s ease, transform 0.5s ease'
+            }}>
+              <div className="flex items-center justify-center gap-2 mb-5">
+                <span
+                  className="text-sm font-medium"
+                  style={{ color: "var(--muted)" }}
+                >
+                  {lang === "en" ? "as a" : "sebagai"}
+                </span>
+                <RotatingText
+                  texts={t.rotating}
+                  mainClassName="text-sm font-bold overflow-hidden h-[26px] px-3 pt-[3px] pb-[1px] rounded-md relative top-[1px]"
+                  staggerFrom="last"
+                  staggerDuration={0.03}
+                  rotationInterval={2500}
+                  transition={{ type: "spring", damping: 20, stiffness: 250 }}
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: "-110%", opacity: 0 }}
+                  splitBy="characters"
+                  elementLevelClassName="inline-block"
+                  style={{ color: "#fff", background: "var(--accent)" }}
+                />
+              </div>
             </div>
 
             <div style={{ color: "var(--muted)" }}>
@@ -337,45 +362,42 @@ export default function ExperienceSection({ lang }: Props) {
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.2}
                 textAlign="center"
+                onLetterAnimationComplete={() => setDescDone(true)}
               />
             </div>
 
             {/* Stats */}
-            <div className="flex items-center justify-center gap-8 mt-8">
-              <div className="text-center">
-                <span
-                  className="text-3xl font-bold block"
-                  style={{ color: "var(--accent)" }}
-                >
+            <div className="flex items-center justify-center gap-4 mt-8">
+              <GradientText
+                colors={["#2E6FB5", "#5B9BD5", "#82B8E8", "#2E6FB5"]}
+                animationSpeed={6}
+                className="!mx-0 !overflow-visible !rounded-none text-center"
+              >
+                <span className="text-3xl font-bold block">
                   <CountUp to={totalExperiences} duration={2} separator="" />
                   <span>+</span>
                 </span>
-                <span
-                  className="text-xs font-medium"
-                  style={{ color: "var(--muted)" }}
-                >
+                <span className="text-xs font-medium block" style={{ WebkitTextFillColor: "var(--text-main)" }}>
                   {lang === "en" ? "Experiences" : "Pengalaman"}
                 </span>
-              </div>
+              </GradientText>
               <div
-                className="w-px h-10"
+                className="w-px h-12 shrink-0"
                 style={{ background: "var(--border)" }}
               />
-              <div className="text-center">
-                <span
-                  className="text-3xl font-bold block"
-                  style={{ color: "var(--accent)" }}
-                >
+              <GradientText
+                colors={["#2E6FB5", "#5B9BD5", "#82B8E8", "#2E6FB5"]}
+                animationSpeed={6}
+                className="!mx-0 !overflow-visible !rounded-none text-center"
+              >
+                <span className="text-3xl font-bold block">
                   <CountUp to={3} duration={2} separator="" />
                   <span>+</span>
                 </span>
-                <span
-                  className="text-xs font-medium"
-                  style={{ color: "var(--muted)" }}
-                >
+                <span className="text-xs font-medium block" style={{ WebkitTextFillColor: "var(--text-main)" }}>
                   {lang === "en" ? "Years Active" : "Tahun Aktif"}
                 </span>
-              </div>
+              </GradientText>
             </div>
           </div>
 
