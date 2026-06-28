@@ -242,6 +242,17 @@ export default function ProjectsSection({ lang }: Props) {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(
     null
   );
+  const [titleDone, setTitleDone] = useState(false);
+  const [descDone, setDescDone] = useState(false);
+  const [showSubtitle, setShowSubtitle] = useState(false);
+
+  const bothDone = titleDone && descDone;
+
+  React.useEffect(() => {
+    if (!bothDone) return;
+    const t1 = setTimeout(() => setShowSubtitle(true), 100);
+    return () => { clearTimeout(t1); };
+  }, [bothDone]);
 
   const filtered =
     activeFilter === "all"
@@ -258,13 +269,18 @@ export default function ProjectsSection({ lang }: Props) {
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="mb-16">
-            <GradientText
-              colors={["#2E6FB5", "#5B9BD5", "#82B8E8", "#2E6FB5"]}
-              animationSpeed={6}
-              className="text-xs font-semibold tracking-[0.2em] uppercase mb-4"
-            >
-              {t.subtitle}
-            </GradientText>
+            <div style={{
+              opacity: showSubtitle ? 1 : 0,
+              transform: showSubtitle ? 'translateY(0)' : 'translateY(20px)',
+              transition: 'opacity 0.5s ease, transform 0.5s ease'
+            }}>
+              <p
+                className="text-xs font-semibold tracking-[0.2em] uppercase mb-4"
+                style={{ color: "var(--accent)" }}
+              >
+                {t.subtitle}
+              </p>
+            </div>
 
             <div className="flex items-baseline gap-3 flex-wrap mb-2">
               <div style={{ color: "var(--text-main)" }}>
@@ -279,22 +295,28 @@ export default function ProjectsSection({ lang }: Props) {
                   to={{ opacity: 1, y: 0, rotateX: 0 }}
                   threshold={0.2}
                   textAlign="left"
+                  onLetterAnimationComplete={() => setTitleDone(true)}
                 />
               </div>
-              <RotatingText
-                texts={t.rotating}
-                mainClassName="text-lg font-medium overflow-hidden h-7"
-                staggerFrom="first"
-                staggerDuration={0.025}
-                rotationInterval={3000}
-                transition={{ type: "spring", damping: 22, stiffness: 260 }}
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-110%", opacity: 0 }}
-                splitBy="characters"
-                elementLevelClassName="inline-block"
-                style={{ color: "var(--accent)" }}
-              />
+              <div style={{
+                opacity: titleDone ? 1 : 0,
+                transition: 'opacity 0.1s ease'
+              }}>
+                <RotatingText
+                  texts={t.rotating}
+                  mainClassName="text-lg font-medium overflow-hidden h-7 relative bottom-[8px]"
+                  staggerFrom="first"
+                  staggerDuration={0.025}
+                  rotationInterval={3000}
+                  transition={{ type: "spring", damping: 22, stiffness: 260 }}
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: "-110%", opacity: 0 }}
+                  splitBy="characters"
+                  elementLevelClassName="inline-block"
+                  style={{ color: "var(--accent)" }}
+                />
+              </div>
             </div>
 
             <div style={{ color: "var(--muted)" }}>
@@ -309,23 +331,24 @@ export default function ProjectsSection({ lang }: Props) {
                 to={{ opacity: 1, y: 0 }}
                 threshold={0.2}
                 textAlign="left"
+                onLetterAnimationComplete={() => setDescDone(true)}
               />
             </div>
 
             {/* Project count */}
-            <div className="mt-6 flex items-center gap-3">
-              <span
-                className="text-2xl font-bold"
-                style={{ color: "var(--accent)" }}
+            <div className="mt-6">
+              <GradientText
+                colors={["#2E6FB5", "#5B9BD5", "#82B8E8", "#2E6FB5"]}
+                animationSpeed={6}
+                className="!mx-0 !overflow-visible !rounded-none flex items-center gap-3"
               >
-                <CountUp to={t.projects.length} duration={1.5} />
-              </span>
-              <span
-                className="text-sm font-medium"
-                style={{ color: "var(--muted)" }}
-              >
-                {lang === "en" ? "Projects Completed" : "Proyek Selesai"}
-              </span>
+                <span className="text-2xl font-bold">
+                  <CountUp to={t.projects.length} duration={1.5} />
+                </span>
+                <span className="text-sm font-medium ml-3" style={{ WebkitTextFillColor: "var(--text-main)" }}>
+                  {lang === "en" ? "Projects Completed" : "Proyek Selesai"}
+                </span>
+              </GradientText>
             </div>
           </div>
 
